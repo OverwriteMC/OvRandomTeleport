@@ -15,7 +15,8 @@ public record LocationGenOptions(
         int nearRadiusMax,
         int centerX,
         int centerZ,
-        int maxLocationAttempts
+        int maxLocationAttempts,
+        boolean playerOrientedCenter
 ) {
 
     public enum Shape {
@@ -39,7 +40,8 @@ public record LocationGenOptions(
             0,
             0,
             0,
-            0
+            0,
+            false
     );
 
     public static LocationGenOptions create(ConfigurationSection locationGenOptions) {
@@ -59,7 +61,8 @@ public record LocationGenOptions(
         int centerX = locationGenOptions.getInt("center_x", 0);
         int centerZ = locationGenOptions.getInt("center_z", 0);
         int maxLocationAttempts = locationGenOptions.getInt("max_location_attempts", 50);
+        boolean playerOrientedCenter = locationGenOptions.getBoolean("player_oriented_center", false);
 
-        return new LocationGenOptions(shape, genFormat, minX, maxX, minZ, maxZ, nearRadiusMin, nearRadiusMax, centerX, centerZ, maxLocationAttempts);
+        return new LocationGenOptions(shape, genFormat, minX, maxX, minZ, maxZ, nearRadiusMin, nearRadiusMax, centerX, centerZ, maxLocationAttempts, playerOrientedCenter);
     }
 }

@@ -119,8 +119,8 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
                 z = random.nextInt((maxZ - minZ) + 1) + minZ;
             }
             case RADIAL -> {
-                int centerX = locationGenOptions.centerX();
-                int centerZ = locationGenOptions.centerZ();
+                int centerX = locationGenOptions.playerOrientedCenter() ? (int) Math.round(player.getX()) : locationGenOptions.centerX();
+                int centerZ = locationGenOptions.playerOrientedCenter() ? (int) Math.round(player.getZ()) : locationGenOptions.centerZ();
 
                 do {
                     x = random.nextInt((maxX - minX) + 1) + minX;
@@ -167,8 +167,8 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
                 z = (int) (centerZ + r * radiusZ * Math.sin(theta));
             }
             case RADIAL -> {
-                int centerX = locationGenOptions.centerX();
-                int centerZ = locationGenOptions.centerZ();
+                int centerX = locationGenOptions.playerOrientedCenter() ? (int) Math.round(player.getX()) : locationGenOptions.centerX();
+                int centerZ = locationGenOptions.playerOrientedCenter() ? (int) Math.round(player.getZ()) : locationGenOptions.centerZ();
 
                 double theta;
                 double rX, rZ;
