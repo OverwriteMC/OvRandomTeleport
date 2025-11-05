@@ -42,7 +42,7 @@ public record Avoidance(
             avoidBlocksBlacklist = blocksSection.getBoolean("blacklist", false);
             List<String> avoidBlockList = blocksSection.getStringList("list");
             if (!avoidBlockList.isEmpty()) {
-                avoidBlocks = createMaterialSet(avoidBlockList);
+                avoidBlocks = createBlockSet(avoidBlockList);
             }
         }
         ConfigurationSection biomesSection = avoidance.getConfigurationSection("biomes");
@@ -60,10 +60,13 @@ public record Avoidance(
         return new Avoidance(avoidBlocksBlacklist, avoidBlocks, avoidBiomesBlacklist, avoidBiomes, avoidRegions, avoidTowns);
     }
 
-    private static Set<Material> createMaterialSet(List<String> stringList) {
+    private static Set<Material> createBlockSet(List<String> stringList) {
         Set<Material> materialSet = EnumSet.noneOf(Material.class);
-        for (String material : stringList) {
-            materialSet.add(Material.valueOf(material.toUpperCase(Locale.ENGLISH)));
+        for (String materialName : stringList) {
+            Material material = Material.valueOf(materialName.toUpperCase(Locale.ENGLISH));
+            if (material.isBlock()) {
+                materialSet.add(material);
+            }
         }
         return materialSet;
     }
