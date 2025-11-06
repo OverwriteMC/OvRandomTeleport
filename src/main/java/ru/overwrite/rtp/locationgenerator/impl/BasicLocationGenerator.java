@@ -82,13 +82,12 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         worldPlayers.remove(player);
         for (int i = 0; i < worldPlayers.size(); i++) {
             Player worldPlayer = worldPlayers.get(i);
-            String debugMsg = "Player " + worldPlayer.getName() + " excluded because: ";
             if (worldPlayer.hasPermission("rtp.near.bypass")) {
-                rtpManager.printDebug(debugMsg + "has bypass permission");
+                rtpManager.printDebug("Player " + worldPlayer.getName() + " excluded because: has bypass permission");
                 continue;
             }
             if (isVanished(worldPlayer)) {
-                rtpManager.printDebug(debugMsg + "is vanished");
+                rtpManager.printDebug("Player " + worldPlayer.getName() + " excluded because: is vanished");
                 continue;
             }
             Location loc = worldPlayer.getLocation();
