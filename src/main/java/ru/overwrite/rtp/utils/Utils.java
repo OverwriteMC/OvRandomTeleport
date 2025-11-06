@@ -44,7 +44,10 @@ public final class Utils {
         }
         final List<World> worldList = new ArrayList<>(worldNames.size());
         for (String w : worldNames) {
-            worldList.add(Bukkit.getWorld(w));
+            World world = Bukkit.getWorld(w);
+            if (world != null) {
+                worldList.add(world);
+            }
         }
         return worldList;
     }

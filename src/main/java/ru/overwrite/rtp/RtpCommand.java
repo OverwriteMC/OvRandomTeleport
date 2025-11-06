@@ -107,6 +107,10 @@ public class RtpCommand implements TabExecutor {
             return;
         }
         List<World> activeWorlds = Utils.getWorldList(channel.activeWorlds());
+        if (activeWorlds.isEmpty()) {
+            rtpManager.printDebug("Unable to find any active world for channel " + channel.id());
+            return;
+        }
         if (!activeWorlds.contains(player.getWorld())) {
             rtpManager.printDebug("Active worlds for channel " + channel.id() + " does not includes player's world: " + player.getWorld().getName());
             if (channel.teleportToFirstAllowedWorld()) {
@@ -159,6 +163,10 @@ public class RtpCommand implements TabExecutor {
                     return;
                 }
                 List<World> activeWorlds = Utils.getWorldList(channel.activeWorlds());
+                if (activeWorlds.isEmpty()) {
+                    rtpManager.printDebug("Unable to find any active world for channel " + channel.id());
+                    return;
+                }
                 if (!activeWorlds.contains(targetPlayer.getWorld())) {
                     if (channel.teleportToFirstAllowedWorld()) {
                         processForceTeleport(args, targetPlayer, channel, activeWorlds.get(0));

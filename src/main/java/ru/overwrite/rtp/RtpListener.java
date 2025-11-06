@@ -155,6 +155,10 @@ public class RtpListener implements Listener {
 
     private void processTeleport(Player player, Channel channel, boolean force) {
         List<World> activeWorlds = Utils.getWorldList(channel.activeWorlds());
+        if (activeWorlds.isEmpty()) {
+            rtpManager.printDebug("Unable to find any active world for channel " + channel.id());
+            return;
+        }
         if (!activeWorlds.contains(player.getWorld())) {
             if (channel.teleportToFirstAllowedWorld()) {
                 rtpManager.preTeleport(player, channel, activeWorlds.get(0), force);
