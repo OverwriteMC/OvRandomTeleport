@@ -3,6 +3,7 @@ package ru.overwrite.rtp.locationgenerator.impl;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
 import ru.overwrite.rtp.RtpManager;
 import ru.overwrite.rtp.channels.Settings;
 import ru.overwrite.rtp.channels.settings.LocationGenOptions;
@@ -102,7 +103,8 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
     }
 
     private boolean isVanished(Player player) {
-        return player.hasMetadata("vanished") && player.getMetadata("vanished").get(0).asBoolean();
+        List<MetadataValue> metadata = player.getMetadata("vanished");
+        return !metadata.isEmpty() && metadata.get(0).asBoolean();
     }
 
     public Location generateRandomSquareLocation(Player player, Settings settings, World world) {
