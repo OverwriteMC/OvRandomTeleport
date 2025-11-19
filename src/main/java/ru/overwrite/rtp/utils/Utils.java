@@ -70,7 +70,7 @@ public final class Utils {
     public void checkUpdates(OvRandomTeleport plugin, Consumer<String> consumer) {
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    new URL("https://raw.githubusercontent.com/Overwrite987/OvRandomTeleport/master/VERSION")
+                    new URL("https://raw.githubusercontent.com/OverwriteMC/OvRandomTeleport/master/VERSION")
                             .openStream()))) {
                 consumer.accept(reader.readLine().trim());
             } catch (IOException ex) {
