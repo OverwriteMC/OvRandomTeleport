@@ -8,9 +8,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.RtpManager;
 import ru.overwrite.rtp.channels.settings.Messages;
+import ru.overwrite.rtp.color.ColorizerProvider;
 import ru.overwrite.rtp.configuration.data.CommandMessages;
 import ru.overwrite.rtp.configuration.data.PlaceholderMessages;
-import ru.overwrite.rtp.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class Config {
     public void setupMessages(FileConfiguration config) {
         final ConfigurationSection messages = config.getConfigurationSection("messages");
 
-        messagesPrefix = Utils.COLORIZER.colorize(messages.getString("prefix", "messages.prefix"));
+        messagesPrefix = ColorizerProvider.COLORIZER.colorize(messages.getString("prefix", "messages.prefix"));
 
         this.defaultChannelMessages = new Messages(
                 getPrefixed(messages.getString("no_perms", "messages.no_perms"), messagesPrefix),
@@ -77,18 +77,18 @@ public class Config {
 
         final ConfigurationSection placeholders = messages.getConfigurationSection("placeholders");
         this.placeholderMessages = new PlaceholderMessages(
-                Utils.COLORIZER.colorize(placeholders.getString("no_cooldown", "&aКулдаун отсутствует!")),
-                Utils.COLORIZER.colorize(placeholders.getString("no_value", "&cОтсутствует"))
+                ColorizerProvider.COLORIZER.colorize(placeholders.getString("no_cooldown", "&aКулдаун отсутствует!")),
+                ColorizerProvider.COLORIZER.colorize(placeholders.getString("no_value", "&cОтсутствует"))
         );
 
         final ConfigurationSection time = placeholders.getConfigurationSection("time");
-        timeHours = Utils.COLORIZER.colorize(time.getString("hours", " ч."));
-        timeMinutes = Utils.COLORIZER.colorize(time.getString("minutes", " мин."));
-        timeSeconds = Utils.COLORIZER.colorize(time.getString("seconds", " сек."));
+        timeHours = ColorizerProvider.COLORIZER.colorize(time.getString("hours", " ч."));
+        timeMinutes = ColorizerProvider.COLORIZER.colorize(time.getString("minutes", " мин."));
+        timeSeconds = ColorizerProvider.COLORIZER.colorize(time.getString("seconds", " сек."));
     }
 
     public String getPrefixed(String message, String prefix) {
-        return message != null ? Utils.COLORIZER.colorize(message.replace("%prefix%", prefix)) : null;
+        return message != null ? ColorizerProvider.COLORIZER.colorize(message.replace("%prefix%", prefix)) : null;
     }
 
     public void setupTemplates() {

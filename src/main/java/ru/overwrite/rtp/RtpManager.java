@@ -13,7 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import ru.overwrite.rtp.actions.Action;
-import ru.overwrite.rtp.actions.ActionRegistry;
+import ru.overwrite.rtp.actions.ActionService;
 import ru.overwrite.rtp.actions.impl.*;
 import ru.overwrite.rtp.channels.Channel;
 import ru.overwrite.rtp.channels.ChannelType;
@@ -45,7 +45,7 @@ public final class RtpManager {
     @Getter(AccessLevel.NONE)
     private final Config pluginConfig;
 
-    private final ActionRegistry actionRegistry;
+    private final ActionService actionService;
 
     private Channel defaultChannel;
 
@@ -68,21 +68,21 @@ public final class RtpManager {
         this.pluginConfig = plugin.getPluginConfig();
         this.namedChannels = new HashMap<>();
         this.perPlayerActiveRtpTask = new ConcurrentHashMap<>();
-        this.actionRegistry = new ActionRegistry(plugin);
+        this.actionService = new ActionService(plugin);
         this.locationGenerator = plugin.hasWorldGuard() ? new WGLocationGenerator(this) : new BasicLocationGenerator(this);
         this.specifications = Specifications.create();
         this.registerDefaultActions();
     }
 
     private void registerDefaultActions() {
-        actionRegistry.register(new ActionBarActionType());
-        actionRegistry.register(new ConsoleActionType());
-        actionRegistry.register(new DelayedActionActionType());
-        actionRegistry.register(new EffectActionType());
-        actionRegistry.register(new MessageActionType());
-        actionRegistry.register(new PlayerActionType());
-        actionRegistry.register(new SoundActionType());
-        actionRegistry.register(new TitleActionType());
+        actionService.register(new ActionBarActionType());
+        actionService.register(new ConsoleActionType());
+        actionService.register(new DelayedActionActionType());
+        actionService.register(new EffectActionType());
+        actionService.register(new MessageActionType());
+        actionService.register(new PlayerActionType());
+        actionService.register(new SoundActionType());
+        actionService.register(new TitleActionType());
     }
 
     public void initProxyCalls() {

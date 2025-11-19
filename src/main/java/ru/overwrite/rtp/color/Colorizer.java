@@ -1,6 +1,8 @@
 package ru.overwrite.rtp.color;
 
+import org.jetbrains.annotations.Nullable;
+
 public interface Colorizer {
 
-    String colorize(String message);
+    String colorize(@Nullable String message);
 }

@@ -3,9 +3,9 @@ package ru.overwrite.rtp.channels.settings;
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntSortedMap;
 import it.unimi.dsi.fastutil.objects.Object2IntSortedMaps;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.utils.TimedExpiringMap;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public record Cooldown(
             Object2IntSortedMaps.emptyMap()
     );
 
-    public static Cooldown create(OvRandomTeleport plugin, ConfigurationSection cooldown) {
+    public static Cooldown create(Permission perms, ConfigurationSection cooldown) {
         if (cooldown == null) {
             return EMPTY_COOLDOWN;
         }
@@ -41,13 +41,13 @@ public record Cooldown(
         int defaultCooldown = cooldown.getInt("default_cooldown", -1);
         ConfigurationSection groupCooldownsSection = cooldown.getConfigurationSection("group_cooldowns");
         if (groupCooldownsSection != null) {
-            defaultCooldown = processCooldownSection(plugin, groupCooldownsSection, groupCooldownsMap, useLastGroupCooldown, defaultCooldown);
+            defaultCooldown = processCooldownSection(perms, groupCooldownsSection, groupCooldownsMap, useLastGroupCooldown, defaultCooldown);
         }
 
         int defaultPreTeleportCooldown = cooldown.getInt("default_pre_teleport_cooldown", -1);
         ConfigurationSection preTeleportGroupCooldownsSection = cooldown.getConfigurationSection("pre_teleport_group_cooldowns");
         if (preTeleportGroupCooldownsSection != null) {
-            defaultPreTeleportCooldown = processCooldownSection(plugin, preTeleportGroupCooldownsSection, preTeleportCooldownsMap, useLastGroupCooldown, defaultPreTeleportCooldown);
+            defaultPreTeleportCooldown = processCooldownSection(perms, preTeleportGroupCooldownsSection, preTeleportCooldownsMap, useLastGroupCooldown, defaultPreTeleportCooldown);
         }
 
         TimedExpiringMap<String, Long> playerCooldowns = defaultCooldown > 0 ? new TimedExpiringMap<>(TimeUnit.SECONDS) : null;
@@ -55,8 +55,8 @@ public record Cooldown(
         return new Cooldown(defaultCooldown, playerCooldowns, groupCooldownsMap, defaultPreTeleportCooldown, preTeleportCooldownsMap);
     }
 
-    private static int processCooldownSection(OvRandomTeleport plugin, ConfigurationSection section, Object2IntSortedMap<String> map, boolean useLastGroup, int currentDefault) {
-        if (plugin.getPerms() != null) {
+    private static int processCooldownSection(Permission perms, ConfigurationSection section, Object2IntSortedMap<String> map, boolean useLastGroup, int currentDefault) {
+        if (perms != null) {
             for (String groupName : section.getKeys(false)) {
                 map.put(groupName, section.getInt(groupName));
             }

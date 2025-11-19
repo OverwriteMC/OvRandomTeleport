@@ -85,7 +85,7 @@ public record Particles(
         boolean preTeleportEnabled = false;
         AnimationType preTeleportAnimation = null;
         boolean preTeleportSendOnlyToPlayer = false;
-        List<ParticleData> preTeleportParticles =  null;
+        List<ParticleData> preTeleportParticles = null;
         int preTeleportDots = 0;
         int preTeleportLines = 0;
         int preTeleportDotsPerLine = 0;

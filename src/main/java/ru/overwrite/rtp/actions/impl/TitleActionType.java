@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.actions.Action;
 import ru.overwrite.rtp.actions.ActionType;
+import ru.overwrite.rtp.color.ColorizerProvider;
 import ru.overwrite.rtp.utils.Utils;
 
 public final class TitleActionType implements ActionType {
@@ -24,8 +25,8 @@ public final class TitleActionType implements ActionType {
         int length = titleMessages.length;
 
         return new TitleAction(
-                Utils.COLORIZER.colorize(titleMessages[TITLE_INDEX]),
-                (length > SUBTITLE_INDEX) ? Utils.COLORIZER.colorize(titleMessages[SUBTITLE_INDEX]) : "",
+                ColorizerProvider.COLORIZER.colorize(titleMessages[TITLE_INDEX]),
+                (length > SUBTITLE_INDEX) ? ColorizerProvider.COLORIZER.colorize(titleMessages[SUBTITLE_INDEX]) : "",
                 (length > FADE_IN_INDEX) ? Integer.parseInt(titleMessages[FADE_IN_INDEX]) : 10,
                 (length > STAY_INDEX) ? Integer.parseInt(titleMessages[STAY_INDEX]) : 70,
                 (length > FADE_OUT_INDEX) ? Integer.parseInt(titleMessages[FADE_OUT_INDEX]) : 20

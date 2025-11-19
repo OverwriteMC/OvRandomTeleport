@@ -3,7 +3,7 @@ package ru.overwrite.rtp.channels.settings;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
-import ru.overwrite.rtp.utils.Utils;
+import ru.overwrite.rtp.color.ColorizerProvider;
 
 import java.util.Locale;
 
@@ -29,7 +29,7 @@ public record Bossbar(
         }
 
         boolean enabled = bossbar.getBoolean("enabled", false);
-        String title = Utils.COLORIZER.colorize(bossbar.getString("title"));
+        String title = ColorizerProvider.COLORIZER.colorize(bossbar.getString("title"));
         BarColor color = BarColor.valueOf(bossbar.getString("color", "WHITE").toUpperCase(Locale.ENGLISH));
         BarStyle style = BarStyle.valueOf(bossbar.getString("style", "SEGMENTED_12").toUpperCase(Locale.ENGLISH));
         boolean smoothProgress = bossbar.getBoolean("smooth_progress", false);

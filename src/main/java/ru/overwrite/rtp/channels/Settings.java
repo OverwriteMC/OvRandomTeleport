@@ -3,7 +3,6 @@ package ru.overwrite.rtp.channels;
 import org.bukkit.configuration.ConfigurationSection;
 import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.channels.settings.*;
-import ru.overwrite.rtp.configuration.Config;
 
 public record Settings(
         Costs costs,
@@ -19,12 +18,12 @@ public record Settings(
         return new Settings(
                 Costs.create(plugin, config.getConfigurationSection("costs")),
                 LocationGenOptions.create(config.getConfigurationSection("location_generation_options")),
-                Cooldown.create(plugin, config.getConfigurationSection("cooldown")),
+                Cooldown.create(plugin.getPerms(), config.getConfigurationSection("cooldown")),
                 Bossbar.create(config.getConfigurationSection("bossbar")),
                 Particles.create(config.getConfigurationSection("particles")),
                 Restrictions.create(config.getConfigurationSection("restrictions")),
                 Avoidance.create(config.getConfigurationSection("avoid")),
-                Actions.create(plugin, config.getConfigurationSection("actions"))
+                Actions.create(plugin.getRtpManager().getActionService(), config.getConfigurationSection("actions"))
         );
     }
 }

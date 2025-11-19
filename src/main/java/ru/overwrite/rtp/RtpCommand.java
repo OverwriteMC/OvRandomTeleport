@@ -11,6 +11,7 @@ import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.rtp.channels.Channel;
 import ru.overwrite.rtp.channels.settings.Cooldown;
+import ru.overwrite.rtp.color.ColorizerProvider;
 import ru.overwrite.rtp.configuration.Config;
 import ru.overwrite.rtp.configuration.data.CommandMessages;
 import ru.overwrite.rtp.utils.Utils;
@@ -138,7 +139,7 @@ public class RtpCommand implements TabExecutor {
             case "reload": {
                 rtpManager.cancelAllTasks();
                 final FileConfiguration config = pluginConfig.getFile(plugin.getDataFolder().getAbsolutePath(), "config.yml");
-                Utils.setupColorizer(config.getConfigurationSection("main_settings"));
+                ColorizerProvider.init(config.getConfigurationSection("main_settings"));
                 pluginConfig.setupMessages(config);
                 pluginConfig.setupTemplates();
                 rtpManager.getNamedChannels().clear();

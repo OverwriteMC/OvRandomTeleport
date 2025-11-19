@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.actions.Action;
 import ru.overwrite.rtp.actions.ActionType;
+import ru.overwrite.rtp.color.ColorizerProvider;
 import ru.overwrite.rtp.utils.Utils;
 
 public final class ActionBarActionType implements ActionType {
@@ -14,7 +15,7 @@ public final class ActionBarActionType implements ActionType {
 
     @Override
     public @NotNull Action instance(@NotNull String context, @NotNull OvRandomTeleport plugin) {
-        String text = Utils.COLORIZER.colorize(context);
+        String text = ColorizerProvider.COLORIZER.colorize(context);
         return new ActionBarAction(text);
     }
 

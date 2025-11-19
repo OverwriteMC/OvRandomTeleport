@@ -15,6 +15,7 @@ import ru.overwrite.rtp.channels.Channel;
 import ru.overwrite.rtp.channels.Settings;
 import ru.overwrite.rtp.channels.settings.Actions;
 import ru.overwrite.rtp.channels.settings.Bossbar;
+import ru.overwrite.rtp.color.ColorizerProvider;
 import ru.overwrite.rtp.utils.Utils;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public class RtpTask {
     }
 
     private void setupBossBar(Bossbar bossbar) {
-        String title = Utils.COLORIZER.colorize(bossbar.bossbarTitle().replace("%time%", Utils.getTime(finalPreTeleportCooldown)));
+        String title = ColorizerProvider.COLORIZER.colorize(bossbar.bossbarTitle().replace("%time%", Utils.getTime(finalPreTeleportCooldown)));
         this.bossBar = Bukkit.createBossBar(title, bossbar.bossbarColor(), bossbar.bossbarStyle());
         this.bossBar.addPlayer(this.player);
         if (bossbar.smoothProgress()) {
@@ -108,7 +109,7 @@ public class RtpTask {
                 bossBar.setProgress(progress);
             }
         }
-        String title = Utils.COLORIZER.colorize(this.activeChannel.settings().bossbar().bossbarTitle().replace("%time%", Utils.getTime(preTeleportCooldown)));
+        String title = ColorizerProvider.COLORIZER.colorize(this.activeChannel.settings().bossbar().bossbarTitle().replace("%time%", Utils.getTime(preTeleportCooldown)));
         bossBar.setTitle(title);
     }
 

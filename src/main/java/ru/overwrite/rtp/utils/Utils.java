@@ -3,15 +3,10 @@ package ru.overwrite.rtp.utils;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.channels.settings.Particles;
-import ru.overwrite.rtp.color.Colorizer;
-import ru.overwrite.rtp.color.impl.LegacyAdvancedColorizer;
-import ru.overwrite.rtp.color.impl.LegacyColorizer;
-import ru.overwrite.rtp.color.impl.MiniMessageColorizer;
 import ru.overwrite.rtp.configuration.Config;
 
 import java.io.BufferedReader;
@@ -27,16 +22,6 @@ import java.util.function.Consumer;
 public final class Utils {
 
     public boolean DEBUG = Boolean.getBoolean("OvRandomTeleport.Debug");
-
-    public Colorizer COLORIZER;
-
-    public void setupColorizer(ConfigurationSection mainSettings) {
-        COLORIZER = switch (mainSettings.getString("serializer", "LEGACY").toUpperCase(Locale.ENGLISH)) {
-            case "MINIMESSAGE" -> new MiniMessageColorizer();
-            case "LEGACY_ADVANCED" -> new LegacyAdvancedColorizer();
-            default -> new LegacyColorizer();
-        };
-    }
 
     public List<World> getWorldList(List<String> worldNames) {
         if (worldNames.get(0).equals("*")) {
@@ -92,29 +77,6 @@ public final class Utils {
                 plugin.getLogger().warning("Unable to check for updates: " + ex.getMessage());
             }
         }, 30L);
-    }
-
-    public final char COLOR_CHAR = '§';
-
-    public String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
-        final char[] b = textToTranslate.toCharArray();
-
-        for (int i = 0, length = b.length - 1; i < length; i++) {
-            if (b[i] == altColorChar && isValidColorCharacter(b[i + 1])) {
-                b[i++] = COLOR_CHAR;
-                b[i] |= 0x20;
-            }
-        }
-
-        return new String(b);
-    }
-
-    private boolean isValidColorCharacter(char c) {
-        return switch (c) {
-            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D',
-                 'E', 'F', 'r', 'R', 'k', 'K', 'l', 'L', 'm', 'M', 'n', 'N', 'o', 'O', 'x', 'X' -> true;
-            default -> false;
-        };
     }
 
     public boolean USE_PAPI;

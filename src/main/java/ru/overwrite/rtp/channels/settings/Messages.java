@@ -1,8 +1,8 @@
 package ru.overwrite.rtp.channels.settings;
 
 import org.bukkit.configuration.ConfigurationSection;
+import ru.overwrite.rtp.color.ColorizerProvider;
 import ru.overwrite.rtp.configuration.Config;
-import ru.overwrite.rtp.utils.Utils;
 
 public record Messages(
         String noPerms,
@@ -25,7 +25,7 @@ public record Messages(
             return defaultMessages;
         }
 
-        String prefix = Utils.COLORIZER.colorize(messages.getString("prefix", pluginConfig.getMessagesPrefix()));
+        String prefix = ColorizerProvider.COLORIZER.colorize(messages.getString("prefix", pluginConfig.getMessagesPrefix()));
 
         String noPerms = pluginConfig.getPrefixed(messages.getString("no_perms", defaultMessages.noPerms()), prefix);
         String invalidWorld = pluginConfig.getPrefixed(messages.getString("invalid_world", defaultMessages.invalidWorld()), prefix);
