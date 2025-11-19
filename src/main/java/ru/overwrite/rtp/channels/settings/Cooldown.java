@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntSortedMaps;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import ru.overwrite.rtp.actions.ActionService;
 import ru.overwrite.rtp.utils.TimedExpiringMap;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public record Cooldown(
             Object2IntSortedMaps.emptyMap()
     );
 
-    public static Cooldown create(Permission perms, ConfigurationSection cooldown) {
+    public static Cooldown create(Permission perms, ActionService actionService, ConfigurationSection cooldown) {
         if (cooldown == null) {
             return EMPTY_COOLDOWN;
         }
@@ -50,7 +51,9 @@ public record Cooldown(
             defaultPreTeleportCooldown = processCooldownSection(perms, preTeleportGroupCooldownsSection, preTeleportCooldownsMap, useLastGroupCooldown, defaultPreTeleportCooldown);
         }
 
-        TimedExpiringMap<String, Long> playerCooldowns = defaultCooldown > 0 ? new TimedExpiringMap<>(TimeUnit.SECONDS) : null;
+        TimedExpiringMap<String, Long> playerCooldowns = defaultCooldown > 0
+                ? new TimedExpiringMap<>(TimeUnit.SECONDS, actionService.getActionList(cooldown.getStringList("expire_actions")))
+                : null;
 
         return new Cooldown(defaultCooldown, playerCooldowns, groupCooldownsMap, defaultPreTeleportCooldown, preTeleportCooldownsMap);
     }

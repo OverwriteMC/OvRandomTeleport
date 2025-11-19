@@ -7,6 +7,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.actions.Action;
 import ru.overwrite.rtp.actions.ActionType;
@@ -40,7 +41,7 @@ public final class MessageActionType implements ActionType {
         public static final String[] HOVER_MARKERS = {HOVER_TEXT_PREFIX, CLICK_EVENT_PREFIX};
 
         @Override
-        public void perform(@NotNull Player player, @NotNull String[] searchList, @NotNull String[] replacementList) {
+        public void perform(@NotNull Player player, @Nullable String[] searchList, @Nullable String[] replacementList) {
             String messageToPlayer = Utils.replaceEach(message, searchList, replacementList);
             if (Utils.USE_PAPI) {
                 messageToPlayer = Utils.parsePlaceholders(messageToPlayer, player);

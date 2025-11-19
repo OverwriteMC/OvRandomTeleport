@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.overwrite.rtp.OvRandomTeleport;
 import ru.overwrite.rtp.actions.Action;
 import ru.overwrite.rtp.actions.ActionType;
@@ -38,7 +39,7 @@ public final class EffectActionType implements ActionType {
             @NotNull PotionEffect effect
     ) implements Action {
         @Override
-        public void perform(@NotNull Player player, @NotNull String[] searchList, @NotNull String[] replacementList) {
+        public void perform(@NotNull Player player, @Nullable String[] searchList, @Nullable String[] replacementList) {
             player.addPotionEffect(effect);
         }
     }

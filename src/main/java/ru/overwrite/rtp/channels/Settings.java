@@ -18,7 +18,7 @@ public record Settings(
         return new Settings(
                 Costs.create(plugin, config.getConfigurationSection("costs")),
                 LocationGenOptions.create(config.getConfigurationSection("location_generation_options")),
-                Cooldown.create(plugin.getPerms(), config.getConfigurationSection("cooldown")),
+                Cooldown.create(plugin.getPerms(), plugin.getRtpManager().getActionService(), config.getConfigurationSection("cooldown")),
                 Bossbar.create(config.getConfigurationSection("bossbar")),
                 Particles.create(config.getConfigurationSection("particles")),
                 Restrictions.create(config.getConfigurationSection("restrictions")),

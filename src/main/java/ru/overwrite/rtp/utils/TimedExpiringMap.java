@@ -1,8 +1,11 @@
 package ru.overwrite.rtp.utils;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Expiry;
+import com.github.benmanes.caffeine.cache.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import ru.overwrite.rtp.actions.Action;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class TimedExpiringMap<K, V> {
@@ -10,24 +13,41 @@ public class TimedExpiringMap<K, V> {
     private final Cache<K, ExpiringValue<V>> cache;
     private final TimeUnit unit;
 
-    public TimedExpiringMap(TimeUnit unit) {
+    public TimedExpiringMap(TimeUnit unit, List<Action> expireActions) {
         this.unit = unit;
-        this.cache = CaffeineFactory.newBuilder().expireAfter(new Expiry<K, ExpiringValue<V>>() {
-            @Override
-            public long expireAfterCreate(K key, ExpiringValue<V> value, long currentTime) {
-                return value.expiryDuration();
-            }
+        Caffeine<K, ExpiringValue<V>> caffeine = CaffeineFactory.newBuilder()
+                .expireAfter(new Expiry<>() {
+                    @Override
+                    public long expireAfterCreate(K key, ExpiringValue<V> value, long currentTime) {
+                        return value.expiryDuration();
+                    }
 
-            @Override
-            public long expireAfterUpdate(K key, ExpiringValue<V> value, long currentTime, long currentDuration) {
-                return value.expiryDuration();
-            }
+                    @Override
+                    public long expireAfterUpdate(K key, ExpiringValue<V> value, long currentTime, long currentDuration) {
+                        return value.expiryDuration();
+                    }
 
-            @Override
-            public long expireAfterRead(K key, ExpiringValue<V> value, long currentTime, long currentDuration) {
-                return currentDuration;
-            }
-        }).build();
+                    @Override
+                    public long expireAfterRead(K key, ExpiringValue<V> value, long currentTime, long currentDuration) {
+                        return currentDuration;
+                    }
+                });
+        if (!expireActions.isEmpty()) {
+            caffeine.removalListener((K, V, cause) -> {
+                if (cause == RemovalCause.EXPIRED) {
+                    Player player = Bukkit.getPlayer((String) K);
+                    if (player == null) {
+                        return;
+                    }
+                    String[] empty = new String[0];
+                    for (Action action : expireActions) {
+                        action.perform(player, empty, empty);
+                    }
+                }
+            });
+            caffeine.scheduler(Scheduler.systemScheduler());
+        }
+        this.cache = caffeine.build();
     }
 
     public void put(K key, V value, long duration) {
