@@ -110,7 +110,7 @@ public final class OvRandomTeleport extends JavaPlugin {
             } else {
                 pluginLogger.info("§aВы используете устаревшую плагина!");
                 pluginLogger.info("§aВы можете скачать новую версию здесь:");
-                pluginLogger.info("§bgithub.com/Overwrite987/OvRandomTeleport/releases/");
+                pluginLogger.info("§bgithub.com/OverwriteMC/OvRandomTeleport/releases/");
                 pluginLogger.info("");
                 pluginLogger.info("§aИли обновите плагин при помощи §b/rtp admin update");
             }

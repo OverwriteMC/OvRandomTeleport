@@ -211,7 +211,7 @@ public class RtpCommand implements TabExecutor {
                 sender.sendMessage("§aВы уже используете последнюю версию плагина!");
             } else {
                 String currentJarName = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
-                String downloadUrl = "https://github.com/Overwrite987/OvRandomTeleport/releases/download/" + version + "/" + "OvRandomTeleport-" + version + ".jar";
+                String downloadUrl = "https://github.com/OverwriteMC/OvRandomTeleport/releases/download/" + version + "/" + "OvRandomTeleport-" + version + ".jar";
                 try {
                     File updateFolder = Bukkit.getUpdateFolderFile();
                     File targetFile = new File(updateFolder, currentJarName);
