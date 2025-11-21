@@ -60,7 +60,18 @@
                         <filter>
                             <artifact>*:*</artifact>
                             <excludes>
-                                <exclude>META-INF/**</exclude>
+                                <exclude>META-INF/hk2-*/</exclude>
+                                <exclude>META-INF/maven/</exclude>
+                                <exclude>META-INF/proguard/</exclude>
+                                <exclude>META-INF/services/</exclude>
+                                <exclude>META-INF/versions/</exclude>
+                                <exclude>META-INF/javamail.*</exclude>
+                                <exclude>META-INF/*.txt</exclude>
+                                <exclude>META-INF/LICENSE*</exclude>
+                                <exclude>META-INF/NOTICE*</exclude>
+                                <exclude>META-INF/mailcap*</exclude>
+                                <exclude>META-INF/mimetypes*</exclude>
+                                <exclude>META-INF/gfprobe-*</exclude>
                                 <exclude>javax/**</exclude>
                                 <exclude>org/checkerframework/**</exclude>
                                 <exclude>org/apache/**</exclude>
