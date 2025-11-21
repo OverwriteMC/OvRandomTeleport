@@ -265,8 +265,7 @@ public final class RtpManager {
         this.handlePlayerCooldown(player, channel.settings().cooldown());
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (channel.invulnerableTicks() > 0) {
-                player.setInvulnerable(true);
-                Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> player.setInvulnerable(false), channel.invulnerableTicks());
+                player.setNoDamageTicks(channel.invulnerableTicks());
             }
             player.teleport(loc);
             teleportingNow.remove(player.getName());
