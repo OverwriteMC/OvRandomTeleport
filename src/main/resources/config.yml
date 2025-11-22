@@ -7,6 +7,7 @@ main_settings:
   # MINIMESSAGE был добавлен в новых версиях (1.17+)
   serializer: LEGACY
   # Команда рандомной телепортации (указывается без /)
+  # (Работает только на Paper)
   rtp_command: 'rtp'
   # Алиасы к команде рандомной телепортации
   rtp_aliases: ['randomteleport', 'ovrandomteleport']

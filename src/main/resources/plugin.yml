@@ -8,4 +8,4 @@ libraries:
   - com.github.ben-manes.caffeine:caffeine:3.2.2
   - org.apache.commons:commons-math3:3.6.1
 commands:
-  ovrandomteleport: { }
+  rtp: { }
