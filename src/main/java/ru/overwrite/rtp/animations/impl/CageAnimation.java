@@ -1,8 +1,8 @@
 package ru.overwrite.rtp.animations.impl;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import ru.overwrite.rtp.animations.Animation;
 import ru.overwrite.rtp.channels.settings.Particles;
@@ -50,18 +50,8 @@ public class CageAnimation extends Animation {
         }
         Particles.ParticleData preTeleportParticleData = particleDataIterator.next();
 
-
-        final ParticleBuilder builder = preTeleportParticleData
-                .particle()
-                .builder()
-                .count(1)
-                .offset(0.0, 0.0, 0.0)
-                .extra(speed)
-                .data(preTeleportParticleData.dustOptions())
-                .receivers(receivers)
-                .source(player);
-
         final Location location = player.getLocation();
+        final World world = location.getWorld();
 
         if (tickCounter % dotPerTicks == 0 && currentDots < particles.preTeleport().dots()) {
             currentDots++;
@@ -69,17 +59,41 @@ public class CageAnimation extends Animation {
 
         for (int circle = 0; circle < circles.size(); circle++) {
             double angle = 0;
-
             double yOffset = circles.getDouble(circle);
+
             for (int i = 0; i < currentDots; i++) {
                 double x = Math.cos(angle) * radius;
                 double z = Math.sin(angle) * radius;
 
-                builder.location(location.clone().add(x, yOffset, z)).spawn();
+                Location particleLoc = location.clone().add(x, yOffset, z);
+                world.spawnParticle(
+                        preTeleportParticleData.particle(),
+                        receivers,
+                        player,
+                        particleLoc.getX(),
+                        particleLoc.getY(),
+                        particleLoc.getZ(),
+                        1,
+                        0.0, 0.0, 0.0,
+                        speed,
+                        preTeleportParticleData.dustOptions()
+                );
 
-                if (circle == 0 && i % (dotsPerLine) == 0) {
+                if (circle == 0 && i % dotsPerLine == 0) {
                     for (double y = last; y <= first; y += lineOffset) {
-                        builder.location(location.clone().add(x, y, z)).spawn();
+                        Location lineParticleLoc = location.clone().add(x, y, z);
+                        world.spawnParticle(
+                                preTeleportParticleData.particle(),
+                                receivers,
+                                player,
+                                lineParticleLoc.getX(),
+                                lineParticleLoc.getY(),
+                                lineParticleLoc.getZ(),
+                                1,
+                                0.0, 0.0, 0.0,
+                                speed,
+                                preTeleportParticleData.dustOptions()
+                        );
                     }
                 }
 

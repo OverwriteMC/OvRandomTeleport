@@ -1,6 +1,5 @@
 package ru.overwrite.rtp.animations.impl;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -52,16 +51,6 @@ public class BasicAnimation extends Animation {
         final double cosRotation = Math.cos(verticalRotationSpeed * tickCounter);
         final double sinRotation = Math.sin(verticalRotationSpeed * tickCounter);
 
-        final ParticleBuilder builder = preTeleportParticleData
-                .particle()
-                .builder()
-                .count(1)
-                .offset(0.0, 0.0, 0.0)
-                .extra(speed)
-                .data(preTeleportParticleData.dustOptions())
-                .receivers(receivers)
-                .source(player);
-
         final double twoPiOverDots = 2.0 * Math.PI / particles.preTeleport().dots();
 
         for (int i = 0; i < particles.preTeleport().dots(); i++) {
@@ -87,7 +76,16 @@ public class BasicAnimation extends Animation {
             double py = baseY + y;
             double pz = baseZ + z;
 
-            builder.location(world, px, py, pz).spawn();
+            world.spawnParticle(
+                    preTeleportParticleData.particle(),
+                    receivers,
+                    player,
+                    px, py, pz,
+                    1,
+                    0.0, 0.0, 0.0,
+                    speed,
+                    preTeleportParticleData.dustOptions()
+            );
         }
 
         angle += particles.preTeleport().invert() ? -rotationSpeed : rotationSpeed;
