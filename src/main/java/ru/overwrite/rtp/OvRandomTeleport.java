@@ -160,7 +160,9 @@ public final class OvRandomTeleport extends JavaPlugin {
 
     private void registerCommand(PluginManager pluginManager, ConfigurationSection mainSettings) {
         if (server.getName().equals("CraftBukkit")) {
-            getCommand("ovrandomteleport").setExecutor(new RtpCommand(this));
+            PluginCommand command = getCommand("ovrandomteleport");
+            command.setAliases(mainSettings.getStringList("rtp_aliases"));
+            command.setExecutor(new RtpCommand(this));
             return;
         }
         try {
