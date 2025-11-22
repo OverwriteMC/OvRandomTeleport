@@ -132,16 +132,24 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
+        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
+        if (isOutsideWorldBorder(world, location)) {
+            return null;
+        }
+
         int y = findSafeYPoint(world, x, z);
         if (y < 0) {
             return null;
         }
 
-        Location playerLocation = player.getLocation();
-        Location location = new Location(world, x + 0.5D, y, z + 0.5D, playerLocation.getYaw(), playerLocation.getPitch());
+        location.setY(y);
         if (isLocationRestricted(location, settings.avoidance())) {
             return null;
         }
+
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }
@@ -183,16 +191,24 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
+        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
+        if (isOutsideWorldBorder(world, location)) {
+            return null;
+        }
+
         int y = findSafeYPoint(world, x, z);
         if (y < 0) {
             return null;
         }
 
-        Location playerLocation = player.getLocation();
-        Location location = new Location(world, x + 0.5D, y, z + 0.5D, playerLocation.getYaw(), playerLocation.getPitch());
+        location.setY(y);
         if (isLocationRestricted(location, settings.avoidance())) {
             return null;
         }
+
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }
@@ -237,16 +253,24 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
+        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
+        if (isOutsideWorldBorder(world, location)) {
+            return null;
+        }
+
         int y = findSafeYPoint(world, x, z);
         if (y < 0) {
             return null;
         }
 
-        Location playerLocation = player.getLocation();
-        Location location = new Location(world, x + 0.5D, y, z + 0.5D, playerLocation.getYaw(), playerLocation.getPitch());
+        location.setY(y);
         if (isLocationRestricted(location, settings.avoidance())) {
             return null;
         }
+
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }
@@ -284,16 +308,24 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
+        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
+        if (isOutsideWorldBorder(world, location)) {
+            return null;
+        }
+
         int y = findSafeYPoint(world, x, z);
         if (y < 0) {
             return null;
         }
 
-        Location playerLocation = player.getLocation();
-        Location location = new Location(world, x + 0.5D, y, z + 0.5D, playerLocation.getYaw(), playerLocation.getPitch());
+        location.setY(y);
         if (isLocationRestricted(location, settings.avoidance())) {
             return null;
         }
+
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }

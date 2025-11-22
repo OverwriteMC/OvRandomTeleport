@@ -81,10 +81,6 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     }
 
     protected boolean isLocationRestricted(Location location, Avoidance avoidance) {
-        if (isOutsideWorldBorder(location)) {
-            rtpManager.printDebug(() -> "Location " + Utils.locationToString(location) + " is outside the world border.");
-            return true;
-        }
         if (location.getWorld().getEnvironment() != World.Environment.NETHER && isInsideBlocks(location, true)) {
             rtpManager.printDebug(() -> "Location " + Utils.locationToString(location) + " is inside blocks.");
             return true;
@@ -109,8 +105,12 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         return false;
     }
 
-    private boolean isOutsideWorldBorder(Location location) {
-        return !location.getWorld().getWorldBorder().isInside(location);
+    protected boolean isOutsideWorldBorder(World world, Location location) {
+        if (world.getWorldBorder().isInside(location)) {
+            return false;
+        }
+        rtpManager.printDebug(() -> "Location " + Utils.locationToString(location) + " is outside the world border.");
+        return true;
     }
 
     private boolean isInsideBlocks(Location location, boolean onlyCheckOneBlockUp) {
