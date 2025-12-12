@@ -32,7 +32,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         };
 
         if (location == null) {
-            iterationsPerPlayer.addTo(player.getName(), 1);
+            iterationsPerPlayer.mergeInt(player.getName(), 1, Integer::sum);
             return generateRandomLocation(player, settings, world);
         }
         rtpManager.printDebug(() -> "Location for player '" + player.getName() + "' found in " + iterationsPerPlayer.getInt(player.getName()) + " iterations");
@@ -63,7 +63,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         Location location = generateRandomLocationNearPoint(shape, player, centerX, centerZ, settings, world);
 
         if (location == null) {
-            iterationsPerPlayer.addTo(player.getName(), 1);
+            iterationsPerPlayer.mergeInt(player.getName(), 1, Integer::sum);
             return generateRandomLocationNearPlayer(player, settings, world);
         }
         rtpManager.printDebug(() -> "Location for player '" + player.getName() + "' found in " + iterationsPerPlayer.getInt(player.getName()) + " iterations");
