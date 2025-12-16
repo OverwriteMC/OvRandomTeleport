@@ -35,6 +35,7 @@ public final class MessageActionType implements ActionType {
 
     private record MessageAction(@NotNull String message) implements Action {
 
+        private static final LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer.legacySection();
         private static final String HOVER_TEXT_PREFIX = "hoverText={";
         private static final String CLICK_EVENT_PREFIX = "clickEvent={";
         private static final String BUTTON_PREFIX = "button={";
@@ -78,7 +79,7 @@ public final class MessageActionType implements ActionType {
 
                         remainingText = extractMessage(remainingText);
                         if (!remainingText.isEmpty()) {
-                            components.add(LegacyComponentSerializer.legacySection().deserialize(remainingText));
+                            components.add(LEGACY_COMPONENT_SERIALIZER.deserialize(remainingText));
                         }
                     }
                     break;
@@ -92,7 +93,7 @@ public final class MessageActionType implements ActionType {
 
                     beforeButton = extractMessage(beforeButton);
                     if (!beforeButton.isEmpty()) {
-                        components.add(LegacyComponentSerializer.legacySection().deserialize(beforeButton));
+                        components.add(LEGACY_COMPONENT_SERIALIZER.deserialize(beforeButton));
                     }
                 }
 
@@ -176,12 +177,11 @@ public final class MessageActionType implements ActionType {
                 throw new IllegalArgumentException("Кнопка должна содержать текст.");
             }
 
-            Component buttonComponent = LegacyComponentSerializer.legacySection().deserialize(buttonText);
+            Component buttonComponent = LEGACY_COMPONENT_SERIALIZER.deserialize(buttonText);
 
             if (hoverText != null) {
                 buttonComponent = createHoverEvent(buttonComponent, hoverText);
             }
-
             if (clickEvent != null) {
                 buttonComponent = createClickEvent(buttonComponent, clickEvent);
             }
@@ -254,7 +254,7 @@ public final class MessageActionType implements ActionType {
         }
 
         private Component createHoverEvent(Component message, String hoverText) {
-            HoverEvent<Component> hover = HoverEvent.showText(LegacyComponentSerializer.legacySection().deserialize(hoverText));
+            HoverEvent<Component> hover = HoverEvent.showText(LEGACY_COMPONENT_SERIALIZER.deserialize(hoverText));
             return message.hoverEvent(hover);
         }
 

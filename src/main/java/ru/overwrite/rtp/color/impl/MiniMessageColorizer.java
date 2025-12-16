@@ -8,12 +8,15 @@ import ru.overwrite.rtp.color.Colorizer;
 
 public class MiniMessageColorizer implements Colorizer {
 
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
+    private static final LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer.legacySection();
+
     @Override
     public String colorize(@Nullable String message) {
         if (message == null || message.isEmpty()) {
             return message;
         }
-        Component component = MiniMessage.miniMessage().deserialize(message);
-        return LegacyComponentSerializer.legacySection().serialize(component);
+        Component component = MINI_MESSAGE.deserialize(message);
+        return LEGACY_COMPONENT_SERIALIZER.serialize(component);
     }
 }
