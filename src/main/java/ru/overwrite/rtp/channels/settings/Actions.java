@@ -23,7 +23,7 @@ public record Actions(
     );
 
     public static Actions create(ActionService actionService, ConfigurationSection actions) {
-        if (actions == null) {
+        if (actions == null || actions.getKeys(false).isEmpty()) {
             return EMPTY_ACTIONS;
         }
 

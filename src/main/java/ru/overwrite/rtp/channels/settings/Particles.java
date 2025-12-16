@@ -78,7 +78,7 @@ public record Particles(
     );
 
     public static Particles create(ConfigurationSection particles) {
-        if (particles == null) {
+        if (particles == null || particles.getKeys(false).isEmpty()) {
             return EMPTY_PARTICLES;
         }
 

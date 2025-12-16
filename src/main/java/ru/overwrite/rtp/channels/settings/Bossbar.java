@@ -24,7 +24,7 @@ public record Bossbar(
     );
 
     public static Bossbar create(ConfigurationSection bossbar) {
-        if (bossbar == null) {
+        if (bossbar == null || bossbar.getKeys(false).isEmpty()) {
             return EMPTY_BOSSBAR;
         }
 

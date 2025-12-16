@@ -21,7 +21,7 @@ public record Messages(
 
     public static Messages create(ConfigurationSection messages, Config pluginConfig) {
         Messages defaultMessages = pluginConfig.getDefaultChannelMessages();
-        if (messages == null) {
+        if (messages == null || messages.getKeys(false).isEmpty()) {
             return defaultMessages;
         }
 

@@ -30,7 +30,7 @@ public record Cooldown(
     );
 
     public static Cooldown create(Permission perms, ActionService actionService, ConfigurationSection cooldown) {
-        if (cooldown == null) {
+        if (cooldown == null || cooldown.getKeys(false).isEmpty()) {
             return EMPTY_COOLDOWN;
         }
 

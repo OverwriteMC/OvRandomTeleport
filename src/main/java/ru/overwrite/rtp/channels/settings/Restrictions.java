@@ -20,7 +20,7 @@ public record Restrictions(
 
 
     public static Restrictions create(ConfigurationSection restrictions) {
-        if (restrictions == null) {
+        if (restrictions == null || restrictions.getKeys(false).isEmpty()) {
             return EMPTY_RESTRICTIONS;
         }
 

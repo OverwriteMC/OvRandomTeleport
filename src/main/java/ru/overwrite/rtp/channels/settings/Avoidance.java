@@ -27,7 +27,7 @@ public record Avoidance(
     );
 
     public static Avoidance create(ConfigurationSection avoidance) {
-        if (avoidance == null) {
+        if (avoidance == null || avoidance.getKeys(false).isEmpty()) {
             return EMPTY_AVOIDANCE;
         }
 

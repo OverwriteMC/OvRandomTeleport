@@ -30,32 +30,32 @@ public record LocationGenOptions(
     }
 
     private static final LocationGenOptions EMPTY_LGE = new LocationGenOptions(
-            null,
-            null,
+            Shape.SQUARE,
+            GenFormat.RECTANGULAR,
+            -1000,
+            1000,
+            -1000,
+            1000,
+            30,
+            60,
             0,
             0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            50,
             false
     );
 
     public static LocationGenOptions create(ConfigurationSection locationGenOptions) {
-        if (locationGenOptions == null) {
+        if (locationGenOptions == null || locationGenOptions.getKeys(false).isEmpty()) {
             return EMPTY_LGE;
         }
 
         LocationGenOptions.Shape shape = LocationGenOptions.Shape.valueOf(locationGenOptions.getString("shape", "SQUARE").toUpperCase(Locale.ROOT));
         LocationGenOptions.GenFormat genFormat = LocationGenOptions.GenFormat.valueOf(locationGenOptions.getString("gen_format", "RECTANGULAR").toUpperCase(Locale.ROOT));
 
-        int minX = locationGenOptions.getInt("min_x", 0);
-        int maxX = locationGenOptions.getInt("max_x", 0);
-        int minZ = locationGenOptions.getInt("min_z", 0);
-        int maxZ = locationGenOptions.getInt("max_z", 0);
+        int minX = locationGenOptions.getInt("min_x", -1000);
+        int maxX = locationGenOptions.getInt("max_x", 1000);
+        int minZ = locationGenOptions.getInt("min_z", -1000);
+        int maxZ = locationGenOptions.getInt("max_z", 1000);
         int nearRadiusMin = locationGenOptions.getInt("min_near_point_distance", 30);
         int nearRadiusMax = locationGenOptions.getInt("max_near_point_distance", 60);
         int centerX = locationGenOptions.getInt("center_x", 0);

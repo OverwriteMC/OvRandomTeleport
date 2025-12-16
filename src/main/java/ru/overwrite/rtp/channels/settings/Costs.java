@@ -33,7 +33,7 @@ public record Costs(
     );
 
     public static Costs create(OvRandomTeleport plugin, ConfigurationSection costs) {
-        if (costs == null) {
+        if (costs == null || costs.getKeys(false).isEmpty()) {
             return EMPTY_COSTS;
         }
 
