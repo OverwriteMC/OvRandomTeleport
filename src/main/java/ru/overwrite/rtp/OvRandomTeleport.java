@@ -188,5 +188,6 @@ public final class OvRandomTeleport extends JavaPlugin {
             rtpExpansion.unregister();
         }
         server.getScheduler().cancelTasks(this);
+        ru.overwrite.rtp.utils.CaffeineFactory.shutdown();
     }
 }
