@@ -1,8 +1,6 @@
 package ru.overwrite.rtp.locationgenerator;
 
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import it.unimi.dsi.fastutil.objects.Reference2IntMap;
-import it.unimi.dsi.fastutil.objects.Reference2IntMaps;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import it.unimi.dsi.util.XoRoShiRo128PlusRandom;
 import lombok.Getter;
@@ -24,12 +22,12 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     protected final XoRoShiRo128PlusRandom random;
 
     @Getter
-    protected final Reference2IntMap<String> iterationsPerPlayer;
+    protected final Reference2IntOpenHashMap<String> iterationsPerPlayer;
 
     protected AbstractLocationGenerator(RtpManager rtpManager) {
         this.rtpManager = rtpManager;
         this.random = new XoRoShiRo128PlusRandom();
-        this.iterationsPerPlayer = Reference2IntMaps.synchronize(new Reference2IntOpenHashMap<>());
+        this.iterationsPerPlayer = new Reference2IntOpenHashMap<>();
     }
 
     protected boolean hasReachedMaxIterations(String playerName, LocationGenOptions locationGenOptions) {
