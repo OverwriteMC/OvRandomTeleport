@@ -212,8 +212,8 @@ public final class RtpManager {
         boolean finalForce = force || channelPreTeleportCooldown <= 0;
         printDebug("Pre teleporting player '" + playerName + "' with channel '" + channel.id() + "' in world '" + world.getName() + "' (cooldown: " + channelPreTeleportCooldown + " force: " + finalForce + ")");
         teleportingNow.add(playerName);
+        locationGenerator.getIterationsPerPlayer().put(playerName, 1);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            locationGenerator.getIterationsPerPlayer().put(playerName, 1);
             long startTime = System.currentTimeMillis();
             Location loc = switch (channel.type()) {
                 case DEFAULT -> locationGenerator.generateRandomLocation(player, settings, world);

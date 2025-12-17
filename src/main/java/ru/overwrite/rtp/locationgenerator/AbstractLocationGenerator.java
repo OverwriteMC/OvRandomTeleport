@@ -31,14 +31,17 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     }
 
     protected boolean hasReachedMaxIterations(String playerName, LocationGenOptions locationGenOptions) {
-        int iterations = iterationsPerPlayer.getInt(playerName);
-        rtpManager.printDebug("Iterations for player '" + playerName + "': " + iterations);
-        if (iterations >= locationGenOptions.maxLocationAttempts()) {
-            iterationsPerPlayer.removeInt(playerName);
-            rtpManager.printDebug("Max iterations reached for player " + playerName);
-            return true;
+        synchronized (iterationsPerPlayer) {
+            int iterations = iterationsPerPlayer.getInt(playerName);
+            rtpManager.printDebug("Iterations for player '" + playerName + "': " + iterations);
+
+            if (iterations >= locationGenOptions.maxLocationAttempts()) {
+                iterationsPerPlayer.removeInt(playerName);
+                rtpManager.printDebug("Max iterations reached for player " + playerName);
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 
     protected int findSafeYPoint(World world, int x, int z) {

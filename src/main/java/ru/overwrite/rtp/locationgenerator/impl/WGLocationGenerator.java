@@ -87,11 +87,17 @@ public class WGLocationGenerator extends BasicLocationGenerator {
         Location location = generateRandomLocationNearPoint(shape, player, centerX, centerZ, settings, world);
 
         if (location == null) {
-            iterationsPerPlayer.addTo(player.getName(), 1);
+            synchronized (iterationsPerPlayer) {
+                iterationsPerPlayer.addTo(player.getName(), 1);
+            }
             return generateRandomLocationNearRandomRegion(player, settings, world);
         }
-        rtpManager.printDebug(() -> "Location for player '" + player.getName() + "' found in " + iterationsPerPlayer.getInt(player.getName()) + " iterations");
-        iterationsPerPlayer.removeInt(player.getName());
+
+        synchronized (iterationsPerPlayer) {
+            int currentIters = iterationsPerPlayer.getInt(player.getName());
+            rtpManager.printDebug(() -> "Location for player '" + player.getName() + "' found in " + currentIters + " iterations");
+            iterationsPerPlayer.removeInt(player.getName());
+        }
         return location;
     }
 }
