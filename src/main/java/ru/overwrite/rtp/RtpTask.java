@@ -34,6 +34,7 @@ public class RtpTask {
     private BossBar bossBar;
     private BukkitTask countdownTask;
     private BukkitTask animationTask;
+    private BukkitTask smoothProgressTask;
 
     public void startPreTeleportTimer(Location location) {
         this.preTeleportCooldown = this.finalPreTeleportCooldown;
@@ -69,7 +70,7 @@ public class RtpTask {
         this.bossBar = Bukkit.createBossBar(title, bossbar.bossbarColor(), bossbar.bossbarStyle());
         this.bossBar.addPlayer(this.player);
         if (bossbar.smoothProgress()) {
-            new BukkitRunnable() {
+            this.smoothProgressTask = new BukkitRunnable() {
                 final int totalTicks = finalPreTeleportCooldown * 20;
                 int ticksLeft = totalTicks;
 
@@ -94,6 +95,9 @@ public class RtpTask {
     private void cleanupAndTeleport(Location location) {
         if (bossBar != null) {
             bossBar.removeAll();
+        }
+        if (smoothProgressTask != null) {
+            smoothProgressTask.cancel();
         }
         rtpManager.teleportPlayer(this.player, this.activeChannel, location);
         this.cancel(false);
@@ -127,6 +131,9 @@ public class RtpTask {
     public void cancel(boolean returnCost) {
         if (bossBar != null) {
             bossBar.removeAll();
+        }
+        if (smoothProgressTask != null) {
+            smoothProgressTask.cancel();
         }
         if (animationTask != null) {
             animationTask.cancel();
