@@ -54,7 +54,7 @@ public final class RtpManager {
 
     private final Specifications specifications;
 
-    private Map<String, String> proxyCalls;
+    private ru.overwrite.rtp.utils.TimedExpiringMap<String, String> proxyCalls;
 
     @Getter(AccessLevel.NONE)
     @Setter
@@ -83,7 +83,7 @@ public final class RtpManager {
     }
 
     public void initProxyCalls() {
-        this.proxyCalls = new HashMap<>();
+        this.proxyCalls = new ru.overwrite.rtp.utils.TimedExpiringMap<>(java.util.concurrent.TimeUnit.MINUTES, java.util.List.of());
     }
 
     public void setupChannels(FileConfiguration config) {
@@ -228,6 +228,7 @@ public final class RtpManager {
             }
             if (loc == null) {
                 teleportingNow.remove(playerName);
+                locationGenerator.getIterationsPerPlayer().removeInt(playerName);
                 Utils.sendMessage(channel.messages().failToFindLocation(), player);
                 this.returnCost(player, channel);
                 return;
@@ -260,12 +261,14 @@ public final class RtpManager {
     public void teleportPlayer(Player player, Channel channel, Location loc) {
         printDebug("Teleporting player '" + player.getName() + "' with channel '" + channel.id() + "' to location " + Utils.locationToString(loc));
         this.handlePlayerCooldown(player, channel.settings().cooldown());
+        String playerName = player.getName();
+        locationGenerator.getIterationsPerPlayer().removeInt(playerName);
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (channel.invulnerableTicks() > 0) {
                 player.setNoDamageTicks(channel.invulnerableTicks());
             }
             player.teleport(loc);
-            teleportingNow.remove(player.getName());
+            teleportingNow.remove(playerName);
             this.spawnParticleSphere(player, channel.settings().particles());
             this.executeActions(player, channel, 0, channel.settings().actions().afterTeleportActions(), loc);
         });
