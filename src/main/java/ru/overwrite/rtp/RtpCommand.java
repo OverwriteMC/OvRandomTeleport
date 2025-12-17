@@ -5,6 +5,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -139,7 +140,9 @@ public class RtpCommand implements TabExecutor {
             case "reload": {
                 rtpManager.cancelAllTasks();
                 final FileConfiguration config = pluginConfig.getFile(plugin.getDataFolder().getAbsolutePath(), "config.yml");
-                ColorizerProvider.init(config.getConfigurationSection("main_settings"));
+                ConfigurationSection mainSettings = config.getConfigurationSection("main_settings");
+                ColorizerProvider.init(mainSettings);
+                rtpManager.setMaxTeleporting(mainSettings.getInt("max_teleporting", 30));
                 pluginConfig.setupMessages(config);
                 pluginConfig.setupTemplates();
                 rtpManager.getNamedChannels().clear();
