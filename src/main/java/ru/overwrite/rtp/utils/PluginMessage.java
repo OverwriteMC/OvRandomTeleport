@@ -41,7 +41,7 @@ public final class PluginMessage implements PluginMessageListener {
             int separatorIndex = teleportData.indexOf(' ');
             String playerName = teleportData.substring(0, separatorIndex);
             String teleportInfo = teleportData.substring(separatorIndex + 1);
-            rtpManager.getProxyCalls().put(playerName, teleportInfo);
+            rtpManager.getProxyCalls().put(playerName, teleportInfo, 5);
         }
     }
 

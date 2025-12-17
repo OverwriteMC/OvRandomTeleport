@@ -22,4 +22,8 @@ public final class CaffeineFactory {
         return loaderPool;
     }
 
+    public static void shutdown() {
+        loaderPool.shutdown();
+    }
+
 }
