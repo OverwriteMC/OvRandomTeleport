@@ -154,27 +154,18 @@ public final class RtpManager {
 
     private void mergeSectionsRecursive(ConfigurationSection source, ConfigurationSection target) {
         for (String key : source.getKeys(false)) {
-            if (source.isConfigurationSection(key)) {
-                ConfigurationSection sourceSubSection = source.getConfigurationSection(key);
-
-                if (target.isConfigurationSection(key)) {
-                    ConfigurationSection targetSubSection = target.getConfigurationSection(key);
-                    mergeSectionsRecursive(sourceSubSection, targetSubSection);
-                } else if (!target.contains(key)) {
-                    ConfigurationSection newSection = target.createSection(key);
-                    copySection(sourceSubSection, newSection);
-                }
-            } else {
-                if (!target.contains(key)) {
-                    target.addDefault(key, source.get(key));
-                }
+            Object sourceValue = source.get(key);
+            if (!target.contains(key)) {
+                target.set(key, sourceValue);
+                continue;
             }
-        }
-    }
-
-    private void copySection(ConfigurationSection source, ConfigurationSection target) {
-        for (String key : source.getKeys(true)) {
-            target.set(key, source.get(key));
+            if (sourceValue instanceof ConfigurationSection sourceSection &&
+                    target.get(key) instanceof ConfigurationSection targetSection) {
+                mergeSectionsRecursive(
+                        sourceSection,
+                        targetSection
+                );
+            }
         }
     }
 
