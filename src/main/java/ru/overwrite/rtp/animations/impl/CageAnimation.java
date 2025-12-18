@@ -80,14 +80,13 @@ public class CageAnimation extends Animation {
 
                 if (circle == 0 && i % dotsPerLine == 0) {
                     for (double y = last; y <= first; y += lineOffset) {
-                        Location lineParticleLoc = location.clone().add(x, y, z);
                         world.spawnParticle(
                                 preTeleportParticleData.particle(),
                                 receivers,
                                 player,
-                                lineParticleLoc.getX(),
-                                lineParticleLoc.getY(),
-                                lineParticleLoc.getZ(),
+                                location.getX() + x,
+                                location.getY() + y,
+                                location.getZ() + z,
                                 1,
                                 0.0, 0.0, 0.0,
                                 speed,
