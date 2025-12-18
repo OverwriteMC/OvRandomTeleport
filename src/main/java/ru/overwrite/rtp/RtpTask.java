@@ -15,7 +15,7 @@ import ru.overwrite.rtp.channels.Channel;
 import ru.overwrite.rtp.channels.Settings;
 import ru.overwrite.rtp.channels.settings.Actions;
 import ru.overwrite.rtp.channels.settings.Bossbar;
-import ru.overwrite.rtp.color.ColorizerProvider;
+import ru.overwrite.rtp.channels.settings.Particles;
 import ru.overwrite.rtp.utils.Utils;
 
 import java.util.List;
@@ -41,12 +41,13 @@ public class RtpTask {
         if (settings.bossbar().bossbarEnabled()) {
             this.setupBossBar(settings.bossbar());
         }
-        if (settings.particles().preTeleport().enabled()) {
-            this.animationTask = switch (settings.particles().preTeleport().animation()) {
+        Particles particles = settings.particles();
+        if (particles.preTeleport().enabled()) {
+            this.animationTask = switch (particles.preTeleport().animation()) {
                 case CAGE ->
-                        new CageAnimation(this.player, preTeleportCooldown * 20, settings.particles()).runTaskTimerAsynchronously(plugin, 0, 1);
+                        new CageAnimation(this.player, preTeleportCooldown * 20, particles).runTaskTimerAsynchronously(plugin, 0, 1);
                 case BASIC ->
-                        new BasicAnimation(this.player, preTeleportCooldown * 20, settings.particles()).runTaskTimerAsynchronously(plugin, 0, 1);
+                        new BasicAnimation(this.player, preTeleportCooldown * 20, particles).runTaskTimerAsynchronously(plugin, 0, 1);
             };
         }
         this.countdownTask = new BukkitRunnable() {
@@ -65,7 +66,7 @@ public class RtpTask {
     }
 
     private void setupBossBar(Bossbar bossbar) {
-        String title = ColorizerProvider.COLORIZER.colorize(bossbar.bossbarTitle().replace("%time%", Utils.getTime(finalPreTeleportCooldown)));
+        String title = bossbar.bossbarTitle().replace("%time%", Utils.getTime(finalPreTeleportCooldown));
         this.bossBar = Bukkit.createBossBar(title, bossbar.bossbarColor(), bossbar.bossbarStyle());
         this.bossBar.addPlayer(this.player);
         if (bossbar.smoothProgress()) {
@@ -109,7 +110,7 @@ public class RtpTask {
                 bossBar.setProgress(progress);
             }
         }
-        String title = ColorizerProvider.COLORIZER.colorize(this.activeChannel.settings().bossbar().bossbarTitle().replace("%time%", Utils.getTime(preTeleportCooldown)));
+        String title = this.activeChannel.settings().bossbar().bossbarTitle().replace("%time%", Utils.getTime(preTeleportCooldown));
         bossBar.setTitle(title);
     }
 
