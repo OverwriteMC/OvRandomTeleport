@@ -65,14 +65,13 @@ public class CageAnimation extends Animation {
                 double x = Math.cos(angle) * radius;
                 double z = Math.sin(angle) * radius;
 
-                Location particleLoc = location.clone().add(x, yOffset, z);
                 world.spawnParticle(
                         preTeleportParticleData.particle(),
                         receivers,
                         player,
-                        particleLoc.getX(),
-                        particleLoc.getY(),
-                        particleLoc.getZ(),
+                        location.getX() + x,
+                        location.getY() + yOffset,
+                        location.getZ() + z,
                         1,
                         0.0, 0.0, 0.0,
                         speed,
