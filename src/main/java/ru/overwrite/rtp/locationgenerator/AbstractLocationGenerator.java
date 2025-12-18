@@ -50,10 +50,8 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
 
     protected int findSafeNetherYPoint(World world, int x, int z) {
         for (int y = 32; y < 90; y++) {
-            Location location = new Location(world, x, y, z);
-
-            if (location.getBlock().getType().isSolid() && !isInsideBlocks(location, false)) {
-                return location.getBlockY();
+            if (world.getBlockAt(x, y, z).getType().isSolid() && !isInsideBlocks(world, x, y, z, false)) {
+                return y;
             }
         }
         return -1;
@@ -84,11 +82,12 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     }
 
     protected boolean isLocationRestricted(Location location, Avoidance avoidance) {
-        if (location.getWorld().getEnvironment() != World.Environment.NETHER && isInsideBlocks(location, true)) {
+        Block block = location.getBlock();
+        if (block.getWorld().getEnvironment() != World.Environment.NETHER &&
+                isInsideBlocks(block.getWorld(), block.getX(), block.getY(), block.getZ(), true)) {
             rtpManager.printDebug(() -> "Location " + Utils.locationToString(location) + " is inside blocks.");
             return true;
         }
-        Block block = location.getBlock();
         if (isDisallowedBlock(block, avoidance)) {
             rtpManager.printDebug(() -> "Location " + Utils.locationToString(location) + " contains a disallowed block.");
             return true;
@@ -116,12 +115,11 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         return true;
     }
 
-    private boolean isInsideBlocks(Location location, boolean onlyCheckOneBlockUp) {
-        Location aboveLocation = location.clone().add(0, 2, 0);
-        if (!aboveLocation.getBlock().getType().isAir()) {
+    private boolean isInsideBlocks(World world, int x, int y, int z, boolean onlyCheckOneBlockUp) {
+        if (!world.getBlockAt(x, y + 2, z).getType().isAir()) {
             return true;
         }
-        return !onlyCheckOneBlockUp && !aboveLocation.subtract(0, 1, 0).getBlock().getType().isAir();
+        return !onlyCheckOneBlockUp && !world.getBlockAt(x, y + 1, z).getType().isAir();
     }
 
     private boolean isDisallowedBlock(Block block, Avoidance avoidance) {
