@@ -19,7 +19,10 @@ import ru.overwrite.rtp.channels.Channel;
 import ru.overwrite.rtp.channels.ChannelType;
 import ru.overwrite.rtp.channels.Settings;
 import ru.overwrite.rtp.channels.Specifications;
-import ru.overwrite.rtp.channels.settings.*;
+import ru.overwrite.rtp.channels.settings.Cooldown;
+import ru.overwrite.rtp.channels.settings.Costs;
+import ru.overwrite.rtp.channels.settings.Messages;
+import ru.overwrite.rtp.channels.settings.Particles;
 import ru.overwrite.rtp.configuration.Config;
 import ru.overwrite.rtp.locationgenerator.AbstractLocationGenerator;
 import ru.overwrite.rtp.locationgenerator.impl.BasicLocationGenerator;
@@ -257,13 +260,13 @@ public final class RtpManager {
             }
             player.teleport(loc);
             teleportingNow.remove(player.getName());
-            this.spawnParticleSphere(player, channel.settings().particles());
+            this.spawnParticleSphere(player, channel.settings().particles().afterTeleport());
             this.executeActions(player, channel, 0, channel.settings().actions().afterTeleportActions(), loc);
         });
     }
 
-    public void spawnParticleSphere(Player player, Particles particles) {
-        if (!particles.afterTeleport().enabled()) {
+    public void spawnParticleSphere(Player player, Particles.AfterTeleportParticles afterTeleportParticles) {
+        if (!afterTeleportParticles.enabled()) {
             return;
         }
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
@@ -273,36 +276,34 @@ public final class RtpManager {
 
             final double goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
-            final List<Player> receivers = particles.afterTeleport().sendOnlyToPlayer() ? List.of(player) : null;
+            final List<Player> receivers = afterTeleportParticles.sendOnlyToPlayer() ? List.of(player) : null;
 
-            for (int i = 0; i < particles.afterTeleport().count(); i++) {
-                double yOffset = 1 - (2.0 * i) / (particles.afterTeleport().count() - 1);
+            for (int i = 0; i < afterTeleportParticles.count(); i++) {
+                double yOffset = 1 - (2.0 * i) / (afterTeleportParticles.count() - 1);
                 double radiusAtHeight = Math.sqrt(1 - yOffset * yOffset);
 
                 double theta = goldenAngle * i;
 
-                double afterTeleportRadius = particles.afterTeleport().radius();
+                double afterTeleportRadius = afterTeleportParticles.radius();
 
                 double xOffset = afterTeleportRadius * radiusAtHeight * Math.cos(theta);
                 double zOffset = afterTeleportRadius * radiusAtHeight * Math.sin(theta);
 
-                Location particleLocation = loc.clone().add(xOffset, yOffset * afterTeleportRadius, zOffset);
-
                 world.spawnParticle(
-                        particles.afterTeleport().particle().particle(),
+                        afterTeleportParticles.particle().particle(),
                         receivers,
                         player,
-                        particleLocation.getX(),
-                        particleLocation.getY(),
-                        particleLocation.getZ(),
+                        xOffset,
+                        yOffset * afterTeleportRadius,
+                        zOffset,
                         1,
                         0,
                         0,
                         0,
-                        particles.afterTeleport().particleSpeed(),
-                        particles.afterTeleport().particle().dustOptions());
+                        afterTeleportParticles.particleSpeed(),
+                        afterTeleportParticles.particle().dustOptions());
             }
-        }, 1L);
+        }, 2L);
     }
 
     private void handlePlayerCooldown(Player player, Cooldown cooldown) {
