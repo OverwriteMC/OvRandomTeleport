@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 @UtilityClass
 public final class Utils {
 
+    public final boolean NON_ASYNC_MODE = Boolean.getBoolean("OvRandomTeleport.NonAsyncMode");
     public boolean DEBUG = Boolean.getBoolean("OvRandomTeleport.Debug");
 
     public List<World> getWorldList(List<String> worldNames) {

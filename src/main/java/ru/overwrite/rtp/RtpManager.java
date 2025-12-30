@@ -207,7 +207,7 @@ public final class RtpManager {
         printDebug("Pre teleporting player '" + playerName + "' with channel '" + channel.id() + "' in world '" + world.getName() + "' (cooldown: " + channelPreTeleportCooldown + " force: " + finalForce + ")");
         teleportingNow.add(playerName);
         locationGenerator.getIterationsPerPlayer().put(playerName, 1);
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+        Runnable teleportTask = () -> {
             long startTime = System.currentTimeMillis();
             Location loc = switch (channel.type()) {
                 case DEFAULT -> locationGenerator.generateRandomLocation(player, settings, world);
@@ -234,7 +234,13 @@ public final class RtpManager {
                 return;
             }
             this.teleportPlayer(player, channel, loc);
-        });
+        };
+
+        if (!Utils.NON_ASYNC_MODE) {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, teleportTask);
+        } else {
+            teleportTask.run();
+        }
     }
 
     public boolean takeCost(Player player, Channel channel) {
