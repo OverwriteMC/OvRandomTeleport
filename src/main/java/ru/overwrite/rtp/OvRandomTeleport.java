@@ -96,6 +96,7 @@ public final class OvRandomTeleport extends JavaPlugin {
         setupProxy(mainSettings);
         pluginManager.registerEvents(new RtpListener(this), this);
         checkForUpdates(mainSettings);
+        checkForSyncMode();
         server.getScheduler().runTaskAsynchronously(this, () -> rtpManager.setupChannels(config));
     }
 
@@ -178,6 +179,25 @@ public final class OvRandomTeleport extends JavaPlugin {
         } catch (Exception ex) {
             pluginLogger.info("Unable to register RTP command!" + ex);
             pluginManager.disablePlugin(this);
+        }
+    }
+
+    private void checkForSyncMode() {
+        if (Utils.NON_ASYNC_MODE) {
+            pluginLogger.info("§6============= §c! ВНИМАНИЕ ! §6=============");
+            pluginLogger.info("§6============= §c! ВНИМАНИЕ ! §6=============");
+            pluginLogger.info("§6============= §c! ВНИМАНИЕ ! §6=============");
+            pluginLogger.info("");
+            pluginLogger.info("§eВКЛЮЧЁН НЕ-АСИНХРОННЫЙ РЕЖИМ РАБОТЫ!");
+            pluginLogger.info("");
+            pluginLogger.info("§eДАННЫЙ РЕЖИМ ПРЕДНАЗНАЧЕН ИСКЛЮЧИТЕЛЬНО ДЛЯ ЯДЕР БЕЗ ПОДДЕРЖИ АСИНХРОННОГО ОБРАЩЕНИЯ К МИРАМ!");
+            pluginLogger.info("§eОН ДОЛЖЕН БЫТЬ ВКЛЮЧЁН ТОЛЬКО В СЛУЧАЕ ЕСЛИ ВЫ 100% УВЕРЕНЫ, ЧТО АЛЬТЕРНАТИВ В ВАШЕМ СЛУЧАЕ НЕТ!");
+            pluginLogger.info("§eАВТОР ПЛАГИНА НЕ НЕСЁТ ОТВЕТСТВЕННОСТИ В СЛУЧАЕ ЕСЛИ ВАШ СЕРВЕР ВЗОРВЁТСЯ К ЕБЕНИ МАТЕРИ!");
+            pluginLogger.info("§eЯ ВАС СУКА ПРЕДУПРЕДИЛ!!!");
+            pluginLogger.info("");
+            pluginLogger.info("§6============= §c! ВНИМАНИЕ ! §6=============");
+            pluginLogger.info("§6============= §c! ВНИМАНИЕ ! §6=============");
+            pluginLogger.info("§6============= §c! ВНИМАНИЕ ! §6=============");
         }
     }
 
