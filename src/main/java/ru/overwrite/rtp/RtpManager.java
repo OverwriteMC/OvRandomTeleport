@@ -179,8 +179,8 @@ public final class RtpManager {
         return namedChannels.get(channelId);
     }
 
-    public boolean hasActiveTasks(String playerName) {
-        return !perPlayerActiveRtpTask.isEmpty() && perPlayerActiveRtpTask.containsKey(playerName);
+    public RtpTask getActiveTasks(String playerName) {
+        return perPlayerActiveRtpTask.isEmpty() ? null : perPlayerActiveRtpTask.get(playerName);
     }
 
     private final ReferenceList<String> teleportingNow = new ReferenceArrayList<>();

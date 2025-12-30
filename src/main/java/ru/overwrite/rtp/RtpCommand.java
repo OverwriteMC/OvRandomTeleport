@@ -48,7 +48,8 @@ public class RtpCommand implements TabExecutor {
         }
         if (args.length == 0) {
             Player player = (Player) sender;
-            if (rtpManager.hasActiveTasks(player.getName())) {
+            RtpTask rtpTask = rtpManager.getActiveTasks(player.getName());
+            if (rtpTask != null) {
                 return true;
             }
             Channel channel = rtpManager.getDefaultChannel();
@@ -67,9 +68,10 @@ public class RtpCommand implements TabExecutor {
 
         if (args.length == 1) {
             Player player = (Player) sender;
-            if (rtpManager.hasActiveTasks(player.getName())) {
+            RtpTask rtpTask = rtpManager.getActiveTasks(player.getName());
+            if (rtpTask != null) {
                 if (args[0].equalsIgnoreCase("cancel") && player.hasPermission("rtp.cancel")) {
-                    rtpManager.getPerPlayerActiveRtpTask().get(player.getName()).cancel(true);
+                    rtpTask.cancel(true);
                     Utils.sendMessage(pluginConfig.getCommandMessages().cancelled(), player);
                 }
                 return true;
@@ -270,7 +272,7 @@ public class RtpCommand implements TabExecutor {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         final List<String> completions = new ArrayList<>();
         if (args.length == 1 && sender instanceof Player player) {
-            if (rtpManager.hasActiveTasks(player.getName()) && player.hasPermission("rtp.cancel")) {
+            if (rtpManager.getActiveTasks(player.getName()) != null && player.hasPermission("rtp.cancel")) {
                 completions.add("cancel");
                 return getResult(args, completions);
             }
