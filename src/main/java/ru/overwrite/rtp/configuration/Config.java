@@ -127,5 +127,4 @@ public class Config {
         }
         return YamlConfiguration.loadConfiguration(file);
     }
-
 }
