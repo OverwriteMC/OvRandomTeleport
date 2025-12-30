@@ -89,9 +89,10 @@ public class RtpCommand implements TabExecutor {
     }
 
     private void processTeleport(Player player, Channel channel) {
-        rtpManager.printDebug("Channel name: " + channel.name() + " Channel permission: rtp.channel." + channel.id());
-        rtpManager.printDebug(() -> "Player permission status: " + player.hasPermission("rtp.channel." + channel.id()));
-        if (!player.hasPermission("rtp.channel." + channel.id())) {
+        String channelPerm = "rtp.channel." + channel.id();
+        rtpManager.printDebug("Channel name: " + channel.name() + " Channel permission: " + channelPerm);
+        rtpManager.printDebug(() -> "Player permission status: " + player.hasPermission(channelPerm));
+        if (!player.hasPermission(channelPerm)) {
             Utils.sendMessage(channel.messages().noPerms(), player);
             return;
         }
@@ -279,7 +280,7 @@ public class RtpCommand implements TabExecutor {
             for (Map.Entry<String, Channel> entry : rtpManager.getNamedChannels().entrySet()) {
                 String channelName = entry.getKey();
                 Channel channel = entry.getValue();
-                if (player.hasPermission("rtp.channel." + channelName) && channel.allowInCommand()) {
+                if (channel.allowInCommand() && player.hasPermission("rtp.channel." + channelName)) {
                     completions.add(channelName);
                 }
             }
