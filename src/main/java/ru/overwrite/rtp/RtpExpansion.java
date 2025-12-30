@@ -18,9 +18,14 @@ public class RtpExpansion extends PlaceholderExpansion {
     private final RtpManager rtpManager;
     private final Config pluginConfig;
 
+    private final String papiBooleanTrue;
+    private final String papiBooleanFalse;
+
     public RtpExpansion(OvRandomTeleport plugin) {
         this.rtpManager = plugin.getRtpManager();
         this.pluginConfig = plugin.getPluginConfig();
+        this.papiBooleanTrue = PlaceholderAPIPlugin.booleanTrue();
+        this.papiBooleanFalse = PlaceholderAPIPlugin.booleanFalse();
     }
 
     @Override
@@ -157,6 +162,6 @@ public class RtpExpansion extends PlaceholderExpansion {
     }
 
     public String getBooleanPlaceholder(boolean b) {
-        return b ? PlaceholderAPIPlugin.booleanTrue() : PlaceholderAPIPlugin.booleanFalse();
+        return b ? papiBooleanTrue : papiBooleanFalse;
     }
 }
