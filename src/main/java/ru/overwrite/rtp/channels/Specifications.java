@@ -34,7 +34,7 @@ public record Specifications(Set<String> joinChannels,
         if (!voidWorlds.isEmpty()) {
             voidChannels.put(newChannel.id(), voidWorlds);
         }
-        int voidLevel = section.getInt("voidLevel");
+        int voidLevel = section.getInt("void_level");
         if (voidLevel != VersionUtils.VOID_LEVEL && voidChannels.containsKey(newChannel.id())) {
             voidLevels.put(newChannel.id(), section.getInt("void_level"));
         }
