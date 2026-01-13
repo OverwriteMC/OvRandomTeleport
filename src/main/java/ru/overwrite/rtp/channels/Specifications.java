@@ -36,7 +36,7 @@ public record Specifications(Set<String> joinChannels,
         }
         int voidLevel = section.getInt("voidLevel");
         if (voidLevel != VersionUtils.VOID_LEVEL && voidChannels.containsKey(newChannel.id())) {
-            voidLevels.put(newChannel.id(), section.getInt("voidLevel"));
+            voidLevels.put(newChannel.id(), section.getInt("void_level"));
         }
         List<String> respawnWorlds = section.getStringList("respawn_worlds");
         if (!respawnWorlds.isEmpty()) {
