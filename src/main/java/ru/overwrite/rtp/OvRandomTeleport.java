@@ -168,7 +168,6 @@ public final class OvRandomTeleport extends JavaPlugin {
         }
         try {
             CommandMap commandMap = server.getCommandMap();
-            System.out.println(commandMap.getCommand("rtp") instanceof PluginCommand);
             if (commandMap.getCommand("rtp") instanceof PluginCommand) {
                 commandMap.getKnownCommands().remove("rtp");
             }
