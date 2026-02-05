@@ -48,7 +48,7 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         return world.getEnvironment() != World.Environment.NETHER ? world.getHighestBlockYAt(x, z) : findSafeNetherYPoint(world, x, z);
     }
 
-    protected int findSafeNetherYPoint(World world, int x, int z) {
+    private int findSafeNetherYPoint(World world, int x, int z) {
         for (int y = 32; y < 90; y++) {
             if (world.getBlockAt(x, y, z).getType().isSolid() && !isInsideBlocks(world, x, y, z, false)) {
                 return y;
