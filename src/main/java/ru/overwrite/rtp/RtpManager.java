@@ -142,7 +142,7 @@ public final class RtpManager {
                     bypassMaxTeleportLimit,
                     channelSettings,
                     messages);
-            namedChannels.put(channelId, newChannel);
+            registerChannel(channelId, newChannel, true);
             specifications.assign(newChannel, channelSection.getConfigurationSection("specifications"));
         }
         this.defaultChannel = getChannelById(config.getString("main_settings.default_channel", ""));
@@ -170,6 +170,14 @@ public final class RtpManager {
                 );
             }
         }
+    }
+
+    public void registerChannel(String channelId, Channel newChannel, boolean overwrite) {
+        if (namedChannels.containsKey(channelId) && !overwrite) {
+            printDebug("Failed to overwrite channel with ID " + channelId);
+            return;
+        }
+        namedChannels.put(channelId, newChannel);
     }
 
     public Channel getChannelById(String channelId) {
