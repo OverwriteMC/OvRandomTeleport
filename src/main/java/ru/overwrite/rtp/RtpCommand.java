@@ -42,12 +42,16 @@ public class RtpCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if (!(sender instanceof Player) && (args.length == 0 || !args[0].equalsIgnoreCase("admin"))) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("admin")) {
+            processAdminCommand(sender, args);
+            return true;
+        }
+
+        if (!(sender instanceof Player player)) {
             plugin.getPluginLogger().info("Вы должны быть игроком!");
             return true;
         }
         if (args.length == 0) {
-            Player player = (Player) sender;
             RtpTask rtpTask = rtpManager.getActiveTasks(player.getName());
             if (rtpTask != null) {
                 return true;
@@ -61,13 +65,7 @@ public class RtpCommand implements TabExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("admin")) {
-            processAdminCommand(sender, args);
-            return true;
-        }
-
         if (args.length == 1) {
-            Player player = (Player) sender;
             RtpTask rtpTask = rtpManager.getActiveTasks(player.getName());
             if (rtpTask != null) {
                 if (args[0].equalsIgnoreCase("cancel") && player.hasPermission("rtp.cancel")) {
@@ -262,11 +260,8 @@ public class RtpCommand implements TabExecutor {
     }
 
     private void processForceTeleport(String[] args, Player targetPlayer, Channel channel, World world) {
-        if (args.length == 5 && args[4].equalsIgnoreCase("force")) {
-            rtpManager.preTeleport(targetPlayer, channel, world, true);
-            return;
-        }
-        rtpManager.preTeleport(targetPlayer, channel, world, false);
+        boolean force = args.length == 5 && args[4].equalsIgnoreCase("force");
+        rtpManager.preTeleport(targetPlayer, channel, world, force);
     }
 
     @Override

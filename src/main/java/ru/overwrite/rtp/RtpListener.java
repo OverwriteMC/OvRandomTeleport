@@ -232,28 +232,13 @@ public class RtpListener implements Listener {
     }
 
     private Player getDamager(Entity damagerEntity) {
-        if (damagerEntity instanceof Player player) {
-            return player;
-        }
-        if (damagerEntity instanceof Projectile projectile) {
-            ProjectileSource source = projectile.getShooter();
-            if (source instanceof Player player) {
-                return player;
-            }
-        }
-        if (damagerEntity instanceof AreaEffectCloud areaEffectCloud) {
-            ProjectileSource source = areaEffectCloud.getSource();
-            if (source instanceof Player player) {
-                return player;
-            }
-        }
-        if (damagerEntity instanceof TNTPrimed tntPrimed) {
-            Entity source = tntPrimed.getSource();
-            if (source instanceof Player player) {
-                return player;
-            }
-        }
-        return null;
+        return switch (damagerEntity) {
+            case Player p -> p;
+            case Projectile p when p.getShooter() instanceof Player shooter -> shooter;
+            case AreaEffectCloud c when c.getSource() instanceof Player shooter -> shooter;
+            case TNTPrimed t when t.getSource() instanceof Player shooter -> shooter;
+            default -> null;
+        };
     }
 
     @EventHandler(ignoreCancelled = true)
