@@ -35,6 +35,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Getter
@@ -272,10 +273,17 @@ public final class RtpManager {
             if (channel.invulnerableTicks() > 0) {
                 player.setNoDamageTicks(channel.invulnerableTicks());
             }
-            player.teleport(loc);
-            teleportingNow.remove(player.getName());
-            this.spawnParticleSphere(player, channel.settings().particles().afterTeleport());
-            this.executeActions(player, channel, 0, channel.settings().actions().afterTeleportActions(), loc);
+            Consumer<Boolean> onTeleport = success -> {
+                teleportingNow.remove(player.getName());
+                this.spawnParticleSphere(player, channel.settings().particles().afterTeleport());
+                this.executeActions(player, channel, 0, channel.settings().actions().afterTeleportActions(), loc);
+            };
+            if (!Utils.NON_ASYNC_MODE) {
+                player.teleportAsync(loc).thenAccept(onTeleport);
+            } else {
+                player.teleport(loc);
+                onTeleport.accept(true);
+            }
         });
     }
 
@@ -284,8 +292,7 @@ public final class RtpManager {
             return;
         }
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-            final Location loc = player.getLocation();
-            loc.add(0, 1, 0);
+            final Location loc = player.getLocation().add(0, 1, 0);
             final World world = loc.getWorld();
 
             final double goldenAngle = Math.PI * (3 - Math.sqrt(5));
