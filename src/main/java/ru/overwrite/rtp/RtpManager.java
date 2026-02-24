@@ -378,6 +378,13 @@ public final class RtpManager {
         }
     }
 
+    public void clearAllCooldowns() {
+        for (Channel channel : namedChannels.values()) {
+            Cooldown cooldown = channel.settings().cooldown();
+            cooldown.clearCooldowns();
+        }
+    }
+
     public void printDebug(final Supplier<String> messageEntry) {
         if (Utils.DEBUG) {
             plugin.getPluginLogger().info(messageEntry.get());

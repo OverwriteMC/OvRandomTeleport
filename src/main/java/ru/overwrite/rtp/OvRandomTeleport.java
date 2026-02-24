@@ -206,6 +206,7 @@ public final class OvRandomTeleport extends JavaPlugin {
     @Override
     public void onDisable() {
         rtpManager.cancelAllTasks();
+        rtpManager.clearAllCooldowns();
         if (rtpExpansion != null) {
             rtpExpansion.unregister();
         }

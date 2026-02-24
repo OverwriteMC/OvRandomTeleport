@@ -76,6 +76,16 @@ public record Cooldown(
     }
 
     public void setCooldown(String name, long cooldownTime) {
+        if (playerCooldowns == null) {
+            return;
+        }
         playerCooldowns.put(name, System.currentTimeMillis(), cooldownTime);
+    }
+
+    public void clearCooldowns() {
+        if (playerCooldowns == null) {
+            return;
+        }
+        playerCooldowns.clear();
     }
 }
