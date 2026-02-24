@@ -36,7 +36,7 @@ public class TimedExpiringMap<K, V> {
             caffeine.removalListener((K, V, cause) -> {
                 if (cause == RemovalCause.EXPIRED) {
                     Player player = Bukkit.getPlayer((String) K);
-                    if (player == null) {
+                    if (player == null || !player.isOnline()) {
                         return;
                     }
                     String[] empty = new String[0];
