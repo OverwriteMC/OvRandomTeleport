@@ -201,7 +201,7 @@ public final class RtpManager {
         }
         if (proxyCalls != null && !channel.serverToMove().isEmpty()) {
             printDebug("Moving player '" + playerName + "' with channel '" + channel.id() + "' to server " + channel.serverToMove());
-            plugin.getPluginMessage().sendCrossProxy(player, channel.serverToMove(), playerName + " " + channel.id() + ";" + world.getName());
+            plugin.getPluginMessage().sendCrossProxy(player, channel.serverToMove(), playerName, channel.id() + ";" + world.getName());
             plugin.getPluginMessage().connectToServer(player, channel.serverToMove());
             return;
         }
