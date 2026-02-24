@@ -63,7 +63,7 @@ public record Cooldown(
             for (String groupName : section.getKeys(false)) {
                 map.put(groupName, section.getInt(groupName));
             }
-            if (!map.isEmpty() && useLastGroup) {
+            if (useLastGroup && !map.isEmpty()) {
                 currentDefault = section.getInt(map.keySet().getLast());
             }
         }
