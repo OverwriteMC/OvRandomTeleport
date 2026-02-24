@@ -64,8 +64,7 @@ public record Cooldown(
                 map.put(groupName, section.getInt(groupName));
             }
             if (!map.isEmpty() && useLastGroup) {
-                List<String> keys = new ArrayList<>(map.keySet());
-                currentDefault = section.getInt(keys.get(keys.size() - 1));
+                currentDefault = section.getInt(map.keySet().getLast());
             }
         }
         return currentDefault;
