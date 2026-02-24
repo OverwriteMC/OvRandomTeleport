@@ -152,8 +152,7 @@ public final class OvRandomTeleport extends JavaPlugin {
         ConfigurationSection proxy = mainSettings.getConfigurationSection("proxy");
         if (proxy != null && proxy.getBoolean("enabled", false)) {
             server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-            String serverId = proxy.getString("server_id");
-            pluginMessage = new PluginMessage(this, serverId);
+            pluginMessage = new PluginMessage(this);
             server.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pluginMessage);
             rtpManager.initProxyCalls();
         }

@@ -13,12 +13,10 @@ public final class PluginMessage implements PluginMessageListener {
 
     private final OvRandomTeleport plugin;
     private final RtpManager rtpManager;
-    private final String serverId;
 
-    public PluginMessage(OvRandomTeleport plugin, String serverId) {
+    public PluginMessage(OvRandomTeleport plugin) {
         this.plugin = plugin;
         this.rtpManager = plugin.getRtpManager();
-        this.serverId = serverId;
     }
 
     @Override
