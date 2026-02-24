@@ -76,7 +76,7 @@ public class RtpTask {
 
                 @Override
                 public void run() {
-                    if (ticksLeft <= 0) {
+                    if (ticksLeft <= 0 || countdownTask.isCancelled()) {
                         this.cancel();
                         return;
                     }
