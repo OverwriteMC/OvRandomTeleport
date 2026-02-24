@@ -10,7 +10,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.projectiles.ProjectileSource;
 import ru.overwrite.rtp.channels.Channel;
 import ru.overwrite.rtp.channels.Specifications;
 import ru.overwrite.rtp.channels.settings.Restrictions;
