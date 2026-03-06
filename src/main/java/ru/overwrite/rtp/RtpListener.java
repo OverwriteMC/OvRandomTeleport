@@ -271,6 +271,5 @@ public class RtpListener implements Listener {
     private void cancelTeleportation(String playerName, RtpTask rtpTask) {
         rtpManager.printDebug("Teleportation for player " + playerName + " was cancelled because of restrictions");
         rtpTask.cancel(true);
-        rtpManager.getLocationGenerator().getIterationsPerPlayer().removeInt(playerName);
     }
 }

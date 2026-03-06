@@ -29,75 +29,70 @@ public class WGLocationGenerator extends BasicLocationGenerator {
     @Override
     public Location generateRandomLocationNearRandomRegion(Player player, Settings settings, World world) {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
-        if (hasReachedMaxIterations(player.getName(), locationGenOptions)) {
-            return null;
-        }
 
-        RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer()
-                .get(BukkitAdapter.adapt(world));
+        for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
+            RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer()
+                    .get(BukkitAdapter.adapt(world));
 
-        Map<String, ProtectedRegion> regions;
-        if (regionManager == null || (regions = regionManager.getRegions()).isEmpty()) {
-            return null;
-        }
+            Map<String, ProtectedRegion> regions;
+            if (regionManager == null || (regions = regionManager.getRegions()).isEmpty()) {
+                return null;
+            }
 
-        int minX = locationGenOptions.minX();
-        int maxX = locationGenOptions.maxX();
-        int minZ = locationGenOptions.minZ();
-        int maxZ = locationGenOptions.maxZ();
+            int minX = locationGenOptions.minX();
+            int maxX = locationGenOptions.maxX();
+            int minZ = locationGenOptions.minZ();
+            int maxZ = locationGenOptions.maxZ();
 
-        BukkitPlayer bukkitPlayer = new BukkitPlayer(WorldGuardPlugin.inst(), player);
-        List<ProtectedRegion> regionsInRange = new ArrayList<>();
-        for (ProtectedRegion region : regions.values()) {
-            if (region.getType() == RegionType.GLOBAL) {
+            BukkitPlayer bukkitPlayer = new BukkitPlayer(WorldGuardPlugin.inst(), player);
+            List<ProtectedRegion> regionsInRange = new ArrayList<>();
+            for (ProtectedRegion region : regions.values()) {
+                if (region.getType() == RegionType.GLOBAL) {
+                    continue;
+                }
+
+                if (region.isMember(bukkitPlayer)) {
+                    rtpManager.printDebug("Skipping region " + region.getId() + " since player is a member of it");
+                    continue;
+                }
+
+                boolean flag = Boolean.TRUE.equals(region.getFlag(WGUtils.RTP_IGNORE_FLAG));
+                if (flag) {
+                    rtpManager.printDebug("Skipping region " + region.getId() + " since it has RTP_IGNORE_FLAG");
+                    continue;
+                }
+
+                BlockVector3 minPoint = region.getMinimumPoint();
+                BlockVector3 maxPoint = region.getMaximumPoint();
+                if (minPoint.getX() >= minX && maxPoint.getX() <= maxX && minPoint.getZ() >= minZ && maxPoint.getZ() <= maxZ) {
+                    regionsInRange.add(region);
+                    continue;
+                }
+                rtpManager.printDebug("Skipping region " + region.getId() + " since it is outside of range");
+            }
+
+            if (regionsInRange.isEmpty()) {
+                rtpManager.printDebug("No regions found to generate location near region");
+                return null;
+            }
+
+            ProtectedRegion randomRegion = regionsInRange.get(random.nextInt(regionsInRange.size()));
+
+            int centerX = (randomRegion.getMinimumPoint().getX() + randomRegion.getMaximumPoint().getX()) / 2;
+            int centerZ = (randomRegion.getMinimumPoint().getZ() + randomRegion.getMaximumPoint().getZ()) / 2;
+
+            LocationGenOptions.Shape shape = locationGenOptions.shape();
+            Location location = generateRandomLocationNearPoint(shape, player, centerX, centerZ, settings, world);
+
+            if (location == null) {
                 continue;
             }
 
-            if (region.isMember(bukkitPlayer)) {
-                rtpManager.printDebug("Skipping region " + region.getId() + " since player is a member of it");
-                continue;
-            }
-
-            boolean flag = Boolean.TRUE.equals(region.getFlag(WGUtils.RTP_IGNORE_FLAG));
-            if (flag) {
-                rtpManager.printDebug("Skipping region " + region.getId() + " since it has RTP_IGNORE_FLAG");
-                continue;
-            }
-
-            BlockVector3 minPoint = region.getMinimumPoint();
-            BlockVector3 maxPoint = region.getMaximumPoint();
-            if (minPoint.getX() >= minX && maxPoint.getX() <= maxX && minPoint.getZ() >= minZ && maxPoint.getZ() <= maxZ) {
-                regionsInRange.add(region);
-                continue;
-            }
-            rtpManager.printDebug("Skipping region " + region.getId() + " since it is outside of range");
+            rtpManager.printDebug("Location for player '" + player.getName() + "' found in " + (attempt + 1) + " iterations");
+            return location;
         }
 
-        if (regionsInRange.isEmpty()) {
-            rtpManager.printDebug("No regions found to generate location near region");
-            return null;
-        }
-
-        ProtectedRegion randomRegion = regionsInRange.get(random.nextInt(regionsInRange.size()));
-
-        int centerX = (randomRegion.getMinimumPoint().getX() + randomRegion.getMaximumPoint().getX()) / 2;
-        int centerZ = (randomRegion.getMinimumPoint().getZ() + randomRegion.getMaximumPoint().getZ()) / 2;
-
-        LocationGenOptions.Shape shape = locationGenOptions.shape();
-        Location location = generateRandomLocationNearPoint(shape, player, centerX, centerZ, settings, world);
-
-        if (location == null) {
-            synchronized (iterationsPerPlayer) {
-                iterationsPerPlayer.addTo(player.getName(), 1);
-            }
-            return generateRandomLocationNearRandomRegion(player, settings, world);
-        }
-
-        synchronized (iterationsPerPlayer) {
-            int currentIters = iterationsPerPlayer.getInt(player.getName());
-            rtpManager.printDebug(() -> "Location for player '" + player.getName() + "' found in " + currentIters + " iterations");
-            iterationsPerPlayer.removeInt(player.getName());
-        }
-        return location;
+        rtpManager.printDebug("Max iterations reached for player " + player.getName());
+        return null;
     }
 }

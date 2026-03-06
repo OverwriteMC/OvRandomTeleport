@@ -215,7 +215,6 @@ public final class RtpManager {
         boolean finalForce = force || channelPreTeleportCooldown <= 0;
         printDebug("Pre teleporting player '" + playerName + "' with channel '" + channel.id() + "' in world '" + world.getName() + "' (cooldown: " + channelPreTeleportCooldown + " force: " + finalForce + ")");
         teleportingNow.add(playerName);
-        locationGenerator.getIterationsPerPlayer().put(playerName, 1);
         Runnable teleportTask = () -> {
             long startTime = System.currentTimeMillis();
             Location loc = switch (channel.type()) {

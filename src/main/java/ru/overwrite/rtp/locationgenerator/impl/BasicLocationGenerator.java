@@ -21,66 +21,57 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
     @Override
     public Location generateRandomLocation(Player player, Settings settings, World world) {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
-        if (hasReachedMaxIterations(player.getName(), locationGenOptions)) {
-            return null;
-        }
 
-        LocationGenOptions.Shape shape = locationGenOptions.shape();
-        Location location = switch (shape) {
-            case SQUARE -> generateRandomSquareLocation(player, settings, world);
-            case ROUND -> generateRandomRoundLocation(player, settings, world);
-        };
+        for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
+            LocationGenOptions.Shape shape = locationGenOptions.shape();
+            Location location = switch (shape) {
+                case SQUARE -> generateRandomSquareLocation(player, settings, world);
+                case ROUND -> generateRandomRoundLocation(player, settings, world);
+            };
 
-        if (location == null) {
-            synchronized (iterationsPerPlayer) {
-                iterationsPerPlayer.addTo(player.getName(), 1);
+            if (location == null) {
+                continue;
             }
-            return generateRandomLocation(player, settings, world);
+
+            rtpManager.printDebug("Location for player '" + player.getName() + "' found in " + (attempt + 1) + " iterations");
+            return location;
         }
 
-        synchronized (iterationsPerPlayer) {
-            int currentIters = iterationsPerPlayer.getInt(player.getName());
-            rtpManager.printDebug(() -> "Location for player '" + player.getName() + "' found in " + currentIters + " iterations");
-            iterationsPerPlayer.removeInt(player.getName());
-        }
-        return location;
+        rtpManager.printDebug("Max iterations reached for player " + player.getName());
+        return null;
     }
 
     @Override
     public Location generateRandomLocationNearPlayer(Player player, Settings settings, World world) {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
-        if (hasReachedMaxIterations(player.getName(), locationGenOptions)) {
-            return null;
-        }
-        List<Player> nearbyPlayers = getNearbyPlayers(player, locationGenOptions, world);
 
-        if (nearbyPlayers.isEmpty()) {
-            rtpManager.printDebug("No players found to generate location near player");
-            return null;
-        }
+        for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
+            List<Player> nearbyPlayers = getNearbyPlayers(player, locationGenOptions, world);
 
-        Player targetPlayer = nearbyPlayers.get(random.nextInt(nearbyPlayers.size()));
-
-        Location loc = targetPlayer.getLocation();
-        int centerX = loc.getBlockX();
-        int centerZ = loc.getBlockZ();
-
-        LocationGenOptions.Shape shape = locationGenOptions.shape();
-        Location location = generateRandomLocationNearPoint(shape, player, centerX, centerZ, settings, world);
-
-        if (location == null) {
-            synchronized (iterationsPerPlayer) {
-                iterationsPerPlayer.addTo(player.getName(), 1);
+            if (nearbyPlayers.isEmpty()) {
+                rtpManager.printDebug("No players found to generate location near player");
+                return null;
             }
-            return generateRandomLocationNearPlayer(player, settings, world);
+
+            Player targetPlayer = nearbyPlayers.get(random.nextInt(nearbyPlayers.size()));
+
+            Location loc = targetPlayer.getLocation();
+            int centerX = loc.getBlockX();
+            int centerZ = loc.getBlockZ();
+
+            LocationGenOptions.Shape shape = locationGenOptions.shape();
+            Location location = generateRandomLocationNearPoint(shape, player, centerX, centerZ, settings, world);
+
+            if (location == null) {
+                continue;
+            }
+
+            rtpManager.printDebug("Location for player '" + player.getName() + "' found in " + (attempt + 1) + " iterations");
+            return location;
         }
 
-        synchronized (iterationsPerPlayer) {
-            int currentIters = iterationsPerPlayer.getInt(player.getName());
-            rtpManager.printDebug(() -> "Location for player '" + player.getName() + "' found in " + currentIters + " iterations");
-            iterationsPerPlayer.removeInt(player.getName());
-        }
-        return location;
+        rtpManager.printDebug("Max iterations reached for player " + player.getName());
+        return null;
     }
 
     private List<Player> getNearbyPlayers(Player player, LocationGenOptions locationGenOptions, World world) {

@@ -1,7 +1,6 @@
 package ru.overwrite.rtp.locationgenerator;
 
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import it.unimi.dsi.util.XoRoShiRo128PlusRandom;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -9,7 +8,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import ru.overwrite.rtp.RtpManager;
 import ru.overwrite.rtp.channels.settings.Avoidance;
-import ru.overwrite.rtp.channels.settings.LocationGenOptions;
 import ru.overwrite.rtp.utils.Utils;
 import ru.overwrite.rtp.utils.regions.TownyUtils;
 import ru.overwrite.rtp.utils.regions.WGUtils;
@@ -21,27 +19,9 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     @Getter
     protected final XoRoShiRo128PlusRandom random;
 
-    @Getter
-    protected final Reference2IntOpenHashMap<String> iterationsPerPlayer;
-
     protected AbstractLocationGenerator(RtpManager rtpManager) {
         this.rtpManager = rtpManager;
         this.random = new XoRoShiRo128PlusRandom();
-        this.iterationsPerPlayer = new Reference2IntOpenHashMap<>();
-    }
-
-    protected boolean hasReachedMaxIterations(String playerName, LocationGenOptions locationGenOptions) {
-        synchronized (iterationsPerPlayer) {
-            int iterations = iterationsPerPlayer.getInt(playerName);
-            rtpManager.printDebug("Iterations for player '" + playerName + "': " + iterations);
-
-            if (iterations >= locationGenOptions.maxLocationAttempts()) {
-                iterationsPerPlayer.removeInt(playerName);
-                rtpManager.printDebug("Max iterations reached for player " + playerName);
-                return true;
-            }
-            return false;
-        }
     }
 
     protected int findSafeYPoint(World world, int x, int z) {
