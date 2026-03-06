@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 import ru.overwrite.rtp.actions.ActionService;
 import ru.overwrite.rtp.utils.TimedExpiringMap;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public record Cooldown(
