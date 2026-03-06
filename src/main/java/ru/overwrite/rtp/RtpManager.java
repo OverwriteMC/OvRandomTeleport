@@ -228,6 +228,7 @@ public final class RtpManager {
                 plugin.getPluginLogger().warn("Генерация локации заняла слишком много времени! (" + locationFound + "ms)");
                 plugin.getPluginLogger().warn("Убедитесь, что вы прогрузили карту при помощи Chunky!");
             }
+            printDebug("Location generated in " + locationFound + " ms");
             if (loc == null) {
                 teleportingNow.remove(playerName);
                 Utils.sendMessage(channel.messages().failToFindLocation(), player);
