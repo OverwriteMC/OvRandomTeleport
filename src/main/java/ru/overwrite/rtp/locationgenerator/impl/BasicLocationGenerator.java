@@ -1,6 +1,5 @@
 package ru.overwrite.rtp.locationgenerator.impl;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -24,7 +23,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
-            if (!player.isOnline() || Bukkit.isStopping()) {
+            if (!player.isOnline()) {
                 return null;
             }
             LocationGenOptions.Shape shape = locationGenOptions.shape();
@@ -50,7 +49,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
-            if (!player.isOnline() ||Bukkit.isStopping()) {
+            if (!player.isOnline()) {
                 return null;
             }
             List<Player> nearbyPlayers = getNearbyPlayers(player, locationGenOptions, world);
