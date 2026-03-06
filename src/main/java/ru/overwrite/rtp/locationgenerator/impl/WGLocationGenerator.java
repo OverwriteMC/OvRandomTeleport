@@ -88,11 +88,11 @@ public class WGLocationGenerator extends BasicLocationGenerator {
                 continue;
             }
 
-            rtpManager.printDebug("Location for player '" + player.getName() + "' found in " + (attempt + 1) + " iterations");
+            rtpManager.printDebug("Location for player '" + player.getName() + "' found in " + (attempt + 1) + " attempts");
             return location;
         }
 
-        rtpManager.printDebug("Max iterations reached for player " + player.getName());
+        rtpManager.printDebug("Max attempts reached for player " + player.getName());
         return null;
     }
 }
