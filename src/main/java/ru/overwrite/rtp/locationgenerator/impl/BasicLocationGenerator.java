@@ -24,7 +24,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
-            if (Bukkit.isStopping()) {
+            if (!player.isOnline() || Bukkit.isStopping()) {
                 return null;
             }
             LocationGenOptions.Shape shape = locationGenOptions.shape();
@@ -50,7 +50,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
-            if (Bukkit.isStopping()) {
+            if (!player.isOnline() ||Bukkit.isStopping()) {
                 return null;
             }
             List<Player> nearbyPlayers = getNearbyPlayers(player, locationGenOptions, world);

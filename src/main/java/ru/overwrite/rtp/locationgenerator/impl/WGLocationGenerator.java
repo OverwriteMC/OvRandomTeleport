@@ -32,7 +32,7 @@ public class WGLocationGenerator extends BasicLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
-            if (Bukkit.isStopping()) {
+            if (!player.isOnline() ||Bukkit.isStopping()) {
                 return null;
             }
             RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer()
