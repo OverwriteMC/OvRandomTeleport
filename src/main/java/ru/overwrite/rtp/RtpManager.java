@@ -109,7 +109,7 @@ public final class RtpManager {
             }
             ConfigurationSection template = pluginConfig.getChannelTemplates().get(channelSection.getString("template", ""));
             if (template != null) {
-                mergeSectionsRecursive(channelSection, template);
+                applyDefaults(channelSection, template);
             }
             String name = channelSection.getString("name", "");
             ChannelType type = ChannelType.valueOf(channelSection.getString("type", "DEFAULT").toUpperCase(Locale.ENGLISH));
@@ -156,19 +156,20 @@ public final class RtpManager {
         printDebug("Channels setup done in " + (endTime - startTime) + " ms");
     }
 
-    private void mergeSectionsRecursive(ConfigurationSection source, ConfigurationSection target) {
-        for (String key : source.getKeys(false)) {
-            Object sourceValue = source.get(key);
+    private void applyDefaults(ConfigurationSection target, ConfigurationSection defaults) {
+        for (String key : defaults.getKeys(false)) {
+            Object defaultValue = defaults.get(key);
             if (!target.contains(key)) {
-                target.set(key, sourceValue);
+                if (defaultValue instanceof ConfigurationSection section) {
+                    target.createSection(key, section.getValues(true));
+                } else {
+                    target.set(key, defaultValue);
+                }
                 continue;
             }
-            if (sourceValue instanceof ConfigurationSection sourceSection &&
-                    target.get(key) instanceof ConfigurationSection targetSection) {
-                mergeSectionsRecursive(
-                        sourceSection,
-                        targetSection
-                );
+            Object targetValue = target.get(key);
+            if (targetValue instanceof ConfigurationSection t && defaultValue instanceof ConfigurationSection d) {
+                applyDefaults(t, d);
             }
         }
     }
