@@ -8,6 +8,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -31,6 +32,9 @@ public class WGLocationGenerator extends BasicLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
+            if (Bukkit.isStopping()) {
+                return null;
+            }
             RegionManager regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer()
                     .get(BukkitAdapter.adapt(world));
 

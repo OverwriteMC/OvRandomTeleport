@@ -1,5 +1,6 @@
 package ru.overwrite.rtp.locationgenerator.impl;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -23,6 +24,9 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
+            if (Bukkit.isStopping()) {
+                return null;
+            }
             LocationGenOptions.Shape shape = locationGenOptions.shape();
             Location location = switch (shape) {
                 case SQUARE -> generateRandomSquareLocation(player, settings, world);
@@ -46,6 +50,9 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
+            if (Bukkit.isStopping()) {
+                return null;
+            }
             List<Player> nearbyPlayers = getNearbyPlayers(player, locationGenOptions, world);
 
             if (nearbyPlayers.isEmpty()) {
