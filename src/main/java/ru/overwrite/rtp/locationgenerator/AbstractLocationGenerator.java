@@ -4,15 +4,19 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import it.unimi.dsi.util.XoRoShiRo128PlusRandom;
 import lombok.Getter;
 import org.bukkit.Location;
+import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import ru.overwrite.rtp.RtpManager;
 import ru.overwrite.rtp.channels.settings.Avoidance;
 import ru.overwrite.rtp.utils.Utils;
+import ru.overwrite.rtp.utils.VersionUtils;
 import ru.overwrite.rtp.utils.regions.TownyUtils;
 import ru.overwrite.rtp.utils.regions.WGUtils;
 
 public abstract class AbstractLocationGenerator implements LocationGenerator {
+
+    private static final boolean AVOID_TREES = VersionUtils.SUB_VERSION > 19 && Boolean.getBoolean("OvRandomTeleport.AvoidTrees");
 
     protected final RtpManager rtpManager;
 
@@ -25,12 +29,43 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     }
 
     protected int findSafeYPoint(World world, int x, int z) {
-        return world.getEnvironment() != World.Environment.NETHER ? world.getHighestBlockYAt(x, z) : findSafeNetherYPoint(world, x, z);
+        return world.getEnvironment() != World.Environment.NETHER ?
+                AVOID_TREES ? findSafeOverworldYPoint(world, x, z) : world.getHighestBlockYAt(x, z) :
+                findSafeNetherYPoint(world, x, z);
+    }
+
+    private int findSafeOverworldYPoint(World world, int x, int z) {
+        int highest = world.getHighestBlockYAt(x, z);
+
+        for (int y = highest; y > VersionUtils.VOID_LEVEL; y--) {
+            Block block = world.getBlockAt(x, y, z);
+
+            if (block.isSolid() && !Tag.LEAVES.isTagged(block.getType()) && !Tag.LOGS.isTagged(block.getType())) {
+
+                boolean hasSolidAbove = false;
+                for (int yy = y + 1; yy <= highest; yy++) {
+                    Block above = world.getBlockAt(x, yy, z);
+                    if (above.isSolid() && !Tag.LEAVES.isTagged(above.getType()) && !Tag.LOGS.isTagged(above.getType())) {
+                        hasSolidAbove = true;
+                        break;
+                    }
+                }
+
+                if (hasSolidAbove) {
+                    continue;
+                }
+
+                if (!isInsideBlocks(world, x, y, z, false)) {
+                    return y;
+                }
+            }
+        }
+        return -1;
     }
 
     private int findSafeNetherYPoint(World world, int x, int z) {
         for (int y = 32; y < 90; y++) {
-            if (world.getBlockAt(x, y, z).getType().isSolid() && !isInsideBlocks(world, x, y, z, false)) {
+            if (world.getBlockAt(x, y, z).isSolid() && !isInsideBlocks(world, x, y, z, false)) {
                 return y;
             }
         }
