@@ -29,19 +29,17 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     }
 
     protected int findSafeYPoint(World world, int x, int z) {
-        return world.getEnvironment() != World.Environment.NETHER ?
-                AVOID_TREES ? findSafeOverworldYPoint(world, x, z) : world.getHighestBlockYAt(x, z) :
-                findSafeNetherYPoint(world, x, z);
+        return world.getEnvironment() != World.Environment.NETHER ? findSafeOverworldYPoint(world, x, z) : findSafeNetherYPoint(world, x, z);
     }
 
     private int findSafeOverworldYPoint(World world, int x, int z) {
         int highest = world.getHighestBlockYAt(x, z);
-
+        if (!AVOID_TREES) {
+            return highest;
+        }
         for (int y = highest; y > VersionUtils.VOID_LEVEL; y--) {
             Block block = world.getBlockAt(x, y, z);
-
             if (block.isSolid() && !Tag.LEAVES.isTagged(block.getType()) && !Tag.LOGS.isTagged(block.getType())) {
-
                 boolean hasSolidAbove = false;
                 for (int yy = y + 1; yy <= highest; yy++) {
                     Block above = world.getBlockAt(x, yy, z);
@@ -50,11 +48,9 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
                         break;
                     }
                 }
-
                 if (hasSolidAbove) {
                     continue;
                 }
-
                 if (!isInsideBlocks(world, x, y, z, false)) {
                     return y;
                 }
