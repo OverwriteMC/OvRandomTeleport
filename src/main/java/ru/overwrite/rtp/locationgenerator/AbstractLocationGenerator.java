@@ -16,8 +16,6 @@ import ru.overwrite.rtp.utils.regions.WGUtils;
 
 public abstract class AbstractLocationGenerator implements LocationGenerator {
 
-    private static final boolean AVOID_TREES = VersionUtils.SUB_VERSION > 19 && Boolean.getBoolean("OvRandomTeleport.AvoidTrees");
-
     protected final RtpManager rtpManager;
 
     @Getter
@@ -28,13 +26,13 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         this.random = new XoRoShiRo128PlusRandom();
     }
 
-    protected int findSafeYPoint(World world, int x, int z) {
-        return world.getEnvironment() != World.Environment.NETHER ? findSafeOverworldYPoint(world, x, z) : findSafeNetherYPoint(world, x, z);
+    protected int findSafeYPoint(World world, int x, int z, boolean avoidTrees) {
+        return world.getEnvironment() != World.Environment.NETHER ? findSafeOverworldYPoint(world, x, z, avoidTrees) : findSafeNetherYPoint(world, x, z);
     }
 
-    private int findSafeOverworldYPoint(World world, int x, int z) {
+    private int findSafeOverworldYPoint(World world, int x, int z, boolean avoidTrees) {
         int highest = world.getHighestBlockYAt(x, z);
-        if (!AVOID_TREES) {
+        if (!avoidTrees) {
             return highest;
         }
         for (int y = highest; y > VersionUtils.VOID_LEVEL; y--) {

@@ -44,10 +44,9 @@ location_generation_options:
   # Необязательные параметры
   min_near_point_distance: 30
   max_near_point_distance: 90
-  # Необязательный параметр
   max_location_attempts: 50
-  # Необязательный параметр
   player_oriented_center: false
+  avoid_trees: false
 # Необязательные параметры
 cooldown:
   default_cooldown: 60

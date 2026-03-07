@@ -146,7 +146,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        int y = findSafeYPoint(world, x, z);
+        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
         if (y < 0) {
             return null;
         }
@@ -205,7 +205,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        int y = findSafeYPoint(world, x, z);
+        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
         if (y < 0) {
             return null;
         }
@@ -267,7 +267,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        int y = findSafeYPoint(world, x, z);
+        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
         if (y < 0) {
             return null;
         }
@@ -322,7 +322,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        int y = findSafeYPoint(world, x, z);
+        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
         if (y < 0) {
             return null;
         }
