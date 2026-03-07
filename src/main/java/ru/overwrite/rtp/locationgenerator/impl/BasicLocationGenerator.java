@@ -156,8 +156,9 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        location.setYaw(player.getYaw());
-        location.setPitch(player.getPitch());
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }
@@ -214,8 +215,9 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        location.setYaw(player.getYaw());
-        location.setPitch(player.getPitch());
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }
@@ -275,8 +277,9 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        location.setYaw(player.getYaw());
-        location.setPitch(player.getPitch());
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }
@@ -329,8 +332,9 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             return null;
         }
 
-        location.setYaw(player.getYaw());
-        location.setPitch(player.getPitch());
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
         location.setY(y + 1D);
         return location;
     }
