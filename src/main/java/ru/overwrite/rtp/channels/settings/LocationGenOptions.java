@@ -1,6 +1,7 @@
 package ru.overwrite.rtp.channels.settings;
 
 import org.bukkit.configuration.ConfigurationSection;
+import ru.overwrite.rtp.utils.VersionUtils;
 
 import java.util.Locale;
 
@@ -64,7 +65,7 @@ public record LocationGenOptions(
         int centerZ = locationGenOptions.getInt("center_z", 0);
         int maxLocationAttempts = locationGenOptions.getInt("max_location_attempts", 50);
         boolean playerOrientedCenter = locationGenOptions.getBoolean("player_oriented_center", false);
-        boolean avoidTrees = locationGenOptions.getBoolean("avoid_trees", false);
+        boolean avoidTrees = VersionUtils.SUB_VERSION > 19 && locationGenOptions.getBoolean("avoid_trees", false);
 
         return new LocationGenOptions(
                 shape,
