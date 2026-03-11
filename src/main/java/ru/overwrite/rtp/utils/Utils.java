@@ -1,5 +1,7 @@
 package ru.overwrite.rtp.utils;
 
+import it.unimi.dsi.fastutil.objects.ReferenceArrayList;
+import it.unimi.dsi.fastutil.objects.ReferenceList;
 import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.*;
@@ -13,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -28,7 +29,7 @@ public final class Utils {
         if (worldNames.get(0).equals("*")) {
             return Bukkit.getWorlds();
         }
-        final List<World> worldList = new ArrayList<>(worldNames.size());
+        final ReferenceList<World> worldList = new ReferenceArrayList<>(worldNames.size());
         for (String w : worldNames) {
             World world = Bukkit.getWorld(w);
             if (world != null) {
