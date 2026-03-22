@@ -157,7 +157,7 @@ public final class MessageActionType implements ActionType {
 
             List<String> parts = getParts(buttonContent);
 
-            for (int i = 0; i < parts.size(); i++) {
+            for (int i = 0, size = parts.size(); i < size; i++) {
                 String part = parts.get(i);
                 if (part.startsWith(HOVER_TEXT_PREFIX)) {
                     hoverText = extractValue(part, HOVER_TEXT_PREFIX);
