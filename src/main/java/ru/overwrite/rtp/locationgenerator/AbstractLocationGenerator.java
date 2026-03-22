@@ -4,10 +4,13 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import it.unimi.dsi.util.XoRoShiRo128PlusRandom;
 import lombok.Getter;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import ru.overwrite.rtp.RtpManager;
+import ru.overwrite.rtp.channels.Settings;
 import ru.overwrite.rtp.channels.settings.Avoidance;
 import ru.overwrite.rtp.utils.Utils;
 import ru.overwrite.rtp.utils.VersionUtils;
@@ -37,21 +40,26 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         }
         for (int y = highest; y > VersionUtils.VOID_LEVEL; y--) {
             Block block = world.getBlockAt(x, y, z);
-            if (block.isSolid() && !Tag.LEAVES.isTagged(block.getType()) && !Tag.LOGS.isTagged(block.getType())) {
-                boolean hasSolidAbove = false;
-                for (int yy = y + 1; yy <= highest; yy++) {
-                    Block above = world.getBlockAt(x, yy, z);
-                    if (above.isSolid() && !Tag.LEAVES.isTagged(above.getType()) && !Tag.LOGS.isTagged(above.getType())) {
-                        hasSolidAbove = true;
-                        break;
-                    }
+            Material type = block.getType();
+
+            if (!block.isSolid() || Tag.LEAVES.isTagged(type) || Tag.LOGS.isTagged(type)) {
+                continue;
+            }
+
+            boolean hasSolidAbove = false;
+            for (int yy = y + 1; yy <= highest; yy++) {
+                Block above = world.getBlockAt(x, yy, z);
+                Material aboveType = above.getType();
+                if (above.isSolid() && !Tag.LEAVES.isTagged(aboveType) && !Tag.LOGS.isTagged(aboveType)) {
+                    hasSolidAbove = true;
+                    break;
                 }
-                if (hasSolidAbove) {
-                    continue;
-                }
-                if (!isInsideBlocks(world, x, y, z, false)) {
-                    return y;
-                }
+            }
+            if (hasSolidAbove) {
+                continue;
+            }
+            if (!isInsideBlocks(world, x, y, z, false)) {
+                return y;
             }
         }
         return -1;
@@ -125,10 +133,10 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
     }
 
     private boolean isInsideBlocks(World world, int x, int y, int z, boolean onlyCheckOneBlockUp) {
-        if (!world.getBlockAt(x, y + 2, z).getType().isAir()) {
+        if (!world.getBlockAt(x, y + 2, z).isEmpty()) {
             return true;
         }
-        return !onlyCheckOneBlockUp && !world.getBlockAt(x, y + 1, z).getType().isAir();
+        return !onlyCheckOneBlockUp && !world.getBlockAt(x, y + 1, z).isEmpty();
     }
 
     private boolean isDisallowedBlock(Block block, Avoidance avoidance) {
@@ -155,5 +163,29 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
 
     private boolean isInsideTown(Location loc, Avoidance avoidance) {
         return avoidance.avoidTowns() && TownyUtils.getTownByLocation(loc) != null;
+    }
+
+    protected Location finalizeLocation(Player player, Settings settings, World world, int x, int z, boolean avoidTrees) {
+        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
+
+        if (isOutsideWorldBorder(world, location)) {
+            return null;
+        }
+
+        int y = findSafeYPoint(world, x, z, avoidTrees);
+        if (y < 0) {
+            return null;
+        }
+
+        location.setY(y);
+        if (isLocationRestricted(location, settings.avoidance())) {
+            return null;
+        }
+
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
+        location.setY(y + 1D);
+        return location;
     }
 }

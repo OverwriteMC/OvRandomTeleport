@@ -48,14 +48,15 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
     public Location generateRandomLocationNearPlayer(Player player, Settings settings, World world) {
         LocationGenOptions locationGenOptions = settings.locationGenOptions();
 
+        List<Player> nearbyPlayers = getNearbyPlayers(player, locationGenOptions, world);
+
+        if (nearbyPlayers.isEmpty()) {
+            rtpManager.printDebug("No players found to generate location near player");
+            return null;
+        }
+
         for (int attempt = 0; attempt < locationGenOptions.maxLocationAttempts(); attempt++) {
             if (!player.isOnline()) {
-                return null;
-            }
-            List<Player> nearbyPlayers = getNearbyPlayers(player, locationGenOptions, world);
-
-            if (nearbyPlayers.isEmpty()) {
-                rtpManager.printDebug("No players found to generate location near player");
                 return null;
             }
 
@@ -141,26 +142,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
-        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
-        if (isOutsideWorldBorder(world, location)) {
-            return null;
-        }
-
-        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
-        if (y < 0) {
-            return null;
-        }
-
-        location.setY(y);
-        if (isLocationRestricted(location, settings.avoidance())) {
-            return null;
-        }
-
-        Location playerLocation = player.getLocation();
-        location.setYaw(playerLocation.getYaw());
-        location.setPitch(playerLocation.getPitch());
-        location.setY(y + 1D);
-        return location;
+        return finalizeLocation(player, settings, world, x, z, locationGenOptions.avoidTrees());
     }
 
     public Location generateRandomRoundLocation(Player player, Settings settings, World world) {
@@ -200,26 +182,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
-        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
-        if (isOutsideWorldBorder(world, location)) {
-            return null;
-        }
-
-        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
-        if (y < 0) {
-            return null;
-        }
-
-        location.setY(y);
-        if (isLocationRestricted(location, settings.avoidance())) {
-            return null;
-        }
-
-        Location playerLocation = player.getLocation();
-        location.setYaw(playerLocation.getYaw());
-        location.setPitch(playerLocation.getPitch());
-        location.setY(y + 1D);
-        return location;
+        return finalizeLocation(player, settings, world, x, z, locationGenOptions.avoidTrees());
     }
 
     public Location generateRandomLocationNearPoint(LocationGenOptions.Shape shape, Player player, int centerX, int centerZ, Settings settings, World world) {
@@ -246,7 +209,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
                 do {
                     x = centerX + (random.nextInt(radiusMax * 2 + 1) - radiusMax);
                     z = centerZ + (random.nextInt(radiusMax * 2 + 1) - radiusMax);
-                } while ((x < minX || x > maxX) && (z < minZ || z > maxZ));
+                } while (x < minX || x > maxX || z < minZ || z > maxZ);
             }
             case RADIAL -> {
                 int genCenterX = locationGenOptions.centerX();
@@ -262,26 +225,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
-        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
-        if (isOutsideWorldBorder(world, location)) {
-            return null;
-        }
-
-        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
-        if (y < 0) {
-            return null;
-        }
-
-        location.setY(y);
-        if (isLocationRestricted(location, settings.avoidance())) {
-            return null;
-        }
-
-        Location playerLocation = player.getLocation();
-        location.setYaw(playerLocation.getYaw());
-        location.setPitch(playerLocation.getPitch());
-        location.setY(y + 1D);
-        return location;
+        return finalizeLocation(player, settings, world, x, z, locationGenOptions.avoidTrees());
     }
 
     private Location generateRandomRoundLocationNearPoint(Player player, int centerX, int centerZ, Settings settings, World world) {
@@ -301,7 +245,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
                 do {
                     x = centerX + (random.nextInt(radiusMax * 2 + 1) - radiusMax);
                     z = centerZ + (random.nextInt(radiusMax * 2 + 1) - radiusMax);
-                } while ((x < minX || x > maxX) && (z < minZ || z > maxZ));
+                } while (x < minX || x > maxX || z < minZ || z > maxZ);
             }
             case RADIAL -> {
                 int genCenterX = locationGenOptions.centerX();
@@ -317,26 +261,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
             }
         }
 
-        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
-        if (isOutsideWorldBorder(world, location)) {
-            return null;
-        }
-
-        int y = findSafeYPoint(world, x, z, locationGenOptions.avoidTrees());
-        if (y < 0) {
-            return null;
-        }
-
-        location.setY(y);
-        if (isLocationRestricted(location, settings.avoidance())) {
-            return null;
-        }
-
-        Location playerLocation = player.getLocation();
-        location.setYaw(playerLocation.getYaw());
-        location.setPitch(playerLocation.getPitch());
-        location.setY(y + 1D);
-        return location;
+        return finalizeLocation(player, settings, world, x, z, locationGenOptions.avoidTrees());
     }
 
     @Override
