@@ -98,7 +98,31 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         return maxDistance <= 1 && minDistance >= 2;
     }
 
-    protected boolean isLocationRestricted(Location location, Avoidance avoidance) {
+    protected Location finalizeLocation(Player player, Settings settings, World world, int x, int z, boolean avoidTrees) {
+        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
+
+        if (isOutsideWorldBorder(world, location)) {
+            return null;
+        }
+
+        int y = findSafeYPoint(world, x, z, avoidTrees);
+        if (y < 0) {
+            return null;
+        }
+
+        location.setY(y);
+        if (isLocationRestricted(location, settings.avoidance())) {
+            return null;
+        }
+
+        Location playerLocation = player.getLocation();
+        location.setYaw(playerLocation.getYaw());
+        location.setPitch(playerLocation.getPitch());
+        location.setY(y + 1D);
+        return location;
+    }
+
+    private boolean isLocationRestricted(Location location, Avoidance avoidance) {
         Block block = location.getBlock();
         if (block.getWorld().getEnvironment() != World.Environment.NETHER &&
                 isInsideBlocks(block.getWorld(), block.getX(), block.getY(), block.getZ(), true)) {
@@ -124,7 +148,7 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         return false;
     }
 
-    protected boolean isOutsideWorldBorder(World world, Location location) {
+    private boolean isOutsideWorldBorder(World world, Location location) {
         if (world.getWorldBorder().isInside(location)) {
             return false;
         }
@@ -163,29 +187,5 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
 
     private boolean isInsideTown(Location loc, Avoidance avoidance) {
         return avoidance.avoidTowns() && TownyUtils.getTownByLocation(loc) != null;
-    }
-
-    protected Location finalizeLocation(Player player, Settings settings, World world, int x, int z, boolean avoidTrees) {
-        Location location = new Location(world, x + 0.5D, 0, z + 0.5D);
-
-        if (isOutsideWorldBorder(world, location)) {
-            return null;
-        }
-
-        int y = findSafeYPoint(world, x, z, avoidTrees);
-        if (y < 0) {
-            return null;
-        }
-
-        location.setY(y);
-        if (isLocationRestricted(location, settings.avoidance())) {
-            return null;
-        }
-
-        Location playerLocation = player.getLocation();
-        location.setYaw(playerLocation.getYaw());
-        location.setPitch(playerLocation.getPitch());
-        location.setY(y + 1D);
-        return location;
     }
 }
