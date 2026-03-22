@@ -1,5 +1,6 @@
 package ru.overwrite.rtp;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
@@ -13,7 +14,6 @@ import ru.overwrite.rtp.animations.impl.BasicAnimation;
 import ru.overwrite.rtp.animations.impl.CageAnimation;
 import ru.overwrite.rtp.channels.Channel;
 import ru.overwrite.rtp.channels.Settings;
-import ru.overwrite.rtp.channels.settings.Actions;
 import ru.overwrite.rtp.channels.settings.Bossbar;
 import ru.overwrite.rtp.channels.settings.Particles;
 import ru.overwrite.rtp.utils.Utils;
@@ -93,9 +93,6 @@ public class RtpTask {
     }
 
     private void cleanupAndTeleport(Location location) {
-        if (bossBar != null) {
-            bossBar.removeAll();
-        }
         rtpManager.teleportPlayer(this.player, this.activeChannel, location);
         this.cancel(false);
     }
@@ -115,11 +112,11 @@ public class RtpTask {
     }
 
     private void handleCooldownActions() {
-        Actions actions = this.activeChannel.settings().actions();
-        if (actions.onCooldownActions().isEmpty()) {
+        Int2ObjectMap<List<Action>> onCooldownActions = this.activeChannel.settings().actions().onCooldownActions();
+        if (onCooldownActions.isEmpty()) {
             return;
         }
-        List<Action> actionList = actions.onCooldownActions().get(preTeleportCooldown);
+        List<Action> actionList = onCooldownActions.get(preTeleportCooldown);
         if (actionList != null) {
             rtpManager.executeActions(this.player, this.activeChannel, finalPreTeleportCooldown, actionList, this.player.getLocation());
         }
