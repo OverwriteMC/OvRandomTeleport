@@ -51,14 +51,14 @@ public class RtpListener implements Listener {
     private boolean processVoid(PlayerMoveEvent e, Player player) {
         Specifications specifications = rtpManager.getSpecifications();
         Map<String, List<String>> voidChannels = specifications.voidChannels();
-        if (voidChannels.isEmpty() || e.getFrom().getBlockY() <= e.getTo().getBlockY()) {
+        int toY = e.getTo().getBlockY();
+        if (voidChannels.isEmpty() || e.getFrom().getBlockY() <= toY) {
             return false;
         }
         for (Map.Entry<String, List<String>> entry : voidChannels.entrySet()) {
             String channelId = entry.getKey();
             Object2IntMap<String> voidLevels = specifications.voidLevels();
-            if (e.getTo().getBlockY() >
-                    (voidLevels.isEmpty()
+            if (toY > (voidLevels.isEmpty()
                             ? VersionUtils.VOID_LEVEL
                             : voidLevels.getOrDefault(channelId, VersionUtils.VOID_LEVEL))) {
                 continue;
