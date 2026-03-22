@@ -239,12 +239,12 @@ public class RtpCommand implements TabExecutor {
         try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
              FileOutputStream out = new FileOutputStream(targetFile)) {
 
-            byte[] data = new byte[1024];
+            byte[] data = new byte[2048];
             int bytesRead;
             int totalBytesRead = 0;
             int lastPercentage = 0;
 
-            while ((bytesRead = in.read(data, 0, 1024)) != -1) {
+            while ((bytesRead = in.read(data)) != -1) {
                 out.write(data, 0, bytesRead);
                 totalBytesRead += bytesRead;
                 int progressPercentage = (int) ((double) totalBytesRead / fileSize * 100);
