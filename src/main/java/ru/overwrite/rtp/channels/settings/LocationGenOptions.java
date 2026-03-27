@@ -68,7 +68,7 @@ public record LocationGenOptions(
         int maxLocationAttempts = locationGenOptions.getInt("max_location_attempts", 50);
         boolean playerOrientedCenter = locationGenOptions.getBoolean("player_oriented_center", false);
         boolean avoidTrees = VersionUtils.SUB_VERSION > 19 && locationGenOptions.getBoolean("avoid_trees", false);
-        int yAdd = avoidTrees ? locationGenOptions.getInt("y_add", 0) : 0;
+        int yAdd = !avoidTrees ? locationGenOptions.getInt("y_add", 0) : 0;
 
         return new LocationGenOptions(
                 shape,
