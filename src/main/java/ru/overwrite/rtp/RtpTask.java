@@ -54,6 +54,7 @@ public class RtpTask {
             @Override
             public void run() {
                 preTeleportCooldown--;
+                rtpManager.printDebug("Pre teleport cooldown tick for " + player.getName() + ". Time remaining: " + preTeleportCooldown);
                 if (preTeleportCooldown <= 0) {
                     cleanupAndTeleport(location);
                     return;
