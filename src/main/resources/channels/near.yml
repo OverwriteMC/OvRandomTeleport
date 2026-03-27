@@ -47,6 +47,7 @@ location_generation_options:
   max_location_attempts: 50
   player_oriented_center: false
   avoid_trees: false
+  y_add: 12
 # Необязательные параметры
 cooldown:
   default_cooldown: 60
@@ -108,6 +109,7 @@ actions:
     - '[TITLE] &a&lУспех!;&fВы телепортировались на координаты: &2%x% %y% %z%.'
     - '[SOUND] ENTITY_PLAYER_LEVELUP;1;1'
     - '[PLAYER] near'
+    - '[EFFECT] SLOW_FALLING;60;0'
 # Необязательный параметр
 # Отдельные сообщения при использовании канала.
 # Если они не указаны - будут использованы дефолтные, из config.yml

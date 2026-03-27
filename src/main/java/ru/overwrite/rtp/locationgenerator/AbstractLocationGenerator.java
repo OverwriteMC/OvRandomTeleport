@@ -118,7 +118,7 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         Location playerLocation = player.getLocation();
         location.setYaw(playerLocation.getYaw());
         location.setPitch(playerLocation.getPitch());
-        location.setY(y + 1D);
+        location.setY(y + 1D + settings.locationGenOptions().yAdd());
         return location;
     }
 

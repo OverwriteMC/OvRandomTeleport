@@ -18,7 +18,8 @@ public record LocationGenOptions(
         int centerZ,
         int maxLocationAttempts,
         boolean playerOrientedCenter,
-        boolean avoidTrees
+        boolean avoidTrees,
+        int yAdd
 ) {
 
     public enum Shape {
@@ -44,7 +45,8 @@ public record LocationGenOptions(
             0,
             50,
             false,
-            false
+            false,
+            0
     );
 
     public static LocationGenOptions create(ConfigurationSection locationGenOptions) {
@@ -66,6 +68,7 @@ public record LocationGenOptions(
         int maxLocationAttempts = locationGenOptions.getInt("max_location_attempts", 50);
         boolean playerOrientedCenter = locationGenOptions.getBoolean("player_oriented_center", false);
         boolean avoidTrees = VersionUtils.SUB_VERSION > 19 && locationGenOptions.getBoolean("avoid_trees", false);
+        int yAdd = avoidTrees ? locationGenOptions.getInt("y_add", 0) : 0;
 
         return new LocationGenOptions(
                 shape,
@@ -80,7 +83,8 @@ public record LocationGenOptions(
                 centerZ,
                 maxLocationAttempts,
                 playerOrientedCenter,
-                avoidTrees
+                avoidTrees,
+                yAdd
         );
     }
 }
