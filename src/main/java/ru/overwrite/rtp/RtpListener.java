@@ -254,12 +254,6 @@ public class RtpListener implements Listener {
         this.handlePlayerLeave(player);
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onKick(PlayerKickEvent e) {
-        Player player = e.getPlayer();
-        this.handlePlayerLeave(player);
-    }
-
     private void handlePlayerLeave(Player player) {
         String playerName = player.getName();
         RtpTask rtpTask = rtpManager.getActiveTasks(playerName);
