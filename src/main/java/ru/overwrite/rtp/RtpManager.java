@@ -126,7 +126,7 @@ public final class RtpManager {
             int minPlayersToUse = channelSection.getInt("min_players_to_use", -1);
             int invulnerableTicks = channelSection.getInt("invulnerable_after_teleport", 15);
             boolean allowInCommands = channelSection.getBoolean("allow_in_command", true);
-            boolean bypassMaxTeleportLimit = channelsSection.getBoolean("bypass_max_teleport_limit", false);
+            boolean bypassMaxTeleportLimit = channelSection.getBoolean("bypass_max_teleport_limit", false);
             Settings channelSettings = Settings.create(plugin, channelSection);
 
             Messages messages = Messages.create(channelSection.getConfigurationSection("messages"), pluginConfig);
