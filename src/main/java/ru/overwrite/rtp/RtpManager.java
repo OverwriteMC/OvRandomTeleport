@@ -295,7 +295,7 @@ public final class RtpManager {
     }
 
     public void spawnParticleSphere(Player player, Particles.AfterTeleportParticles afterTeleportParticles) {
-        if (!afterTeleportParticles.enabled()) {
+        if (!afterTeleportParticles.enabled() || afterTeleportParticles.count() <= 0) {
             return;
         }
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
