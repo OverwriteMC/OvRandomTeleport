@@ -175,7 +175,7 @@ public final class RtpManager {
     }
 
     public void registerChannel(String channelId, Channel newChannel, boolean overwrite) {
-        if (namedChannels.containsKey(channelId) && !overwrite) {
+        if (!overwrite && namedChannels.containsKey(channelId)) {
             printDebug("Failed to overwrite channel with ID " + channelId);
             return;
         }
