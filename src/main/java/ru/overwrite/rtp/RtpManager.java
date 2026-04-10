@@ -275,9 +275,15 @@ public final class RtpManager {
                 player.setNoDamageTicks(channel.invulnerableTicks());
             }
             Consumer<Boolean> onTeleport = success -> {
-                teleportingNow.remove(player.getName());
-                this.spawnParticleSphere(player, channel.settings().particles().afterTeleport());
-                this.executeActions(player, channel, 0, channel.settings().actions().afterTeleportActions(), loc);
+                if (success) {
+                    teleportingNow.remove(player.getName());
+                    this.spawnParticleSphere(player, channel.settings().particles().afterTeleport());
+                    this.executeActions(player, channel, 0, channel.settings().actions().afterTeleportActions(), loc);
+                } else {
+                    teleportingNow.remove(player.getName());
+                    Utils.sendMessage(channel.messages().failToFindLocation(), player);
+                    this.returnCost(player, channel);
+                }
             };
             if (!Utils.NON_ASYNC_MODE) {
                 player.teleportAsync(loc).thenAccept(onTeleport);
