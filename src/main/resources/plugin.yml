@@ -9,3 +9,12 @@ libraries:
   - org.apache.commons:commons-math3:3.6.1
 commands:
   rtp: { }
+permissions:
+  rtp.cancel:
+    default: true
+  rtp.bypasscooldown:
+    default: false
+  rtp.near.bypass:
+    default: false
+  rtp.admin:
+    default: false

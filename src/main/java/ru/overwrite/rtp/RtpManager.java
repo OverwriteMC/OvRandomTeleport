@@ -116,6 +116,7 @@ public final class RtpManager {
             if (type == ChannelType.NEAR_REGION && !plugin.hasWorldGuard()) {
                 type = ChannelType.DEFAULT;
             }
+            String permission = channelSection.getString("permission", "rtp.channel." + channelId);
             List<String> activeWorlds = channelSection.getStringList("active_worlds");
             if (activeWorlds.isEmpty()) {
                 printDebug("Channel does not have active worlds specified. Skipping...");
@@ -134,6 +135,7 @@ public final class RtpManager {
             Channel newChannel = new Channel(channelId,
                     name,
                     type,
+                    permission,
                     activeWorlds,
                     teleportToFirstAllowedWorld,
                     serverToMove,

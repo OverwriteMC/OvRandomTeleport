@@ -67,10 +67,11 @@ public class RtpListener implements Listener {
             if (!worlds.contains(player.getWorld().getName())) {
                 continue;
             }
-            if (!player.hasPermission("rtp.channel." + channelId)) {
+            Channel channel = rtpManager.getChannelById(channelId);
+            if (!channel.permission().isEmpty() && !player.hasPermission(channel.permission())) {
                 continue;
             }
-            this.processTeleport(player, rtpManager.getChannelById(channelId), true);
+            this.processTeleport(player, channel, true);
             return true;
         }
         return false;
@@ -107,10 +108,11 @@ public class RtpListener implements Listener {
             return;
         }
         for (String channelId : joinChannels) {
-            if (!player.hasPermission("rtp.channel." + channelId)) {
+            Channel channel = rtpManager.getChannelById(channelId);
+            if (!channel.permission().isEmpty() && !player.hasPermission(channel.permission())) {
                 continue;
             }
-            this.processTeleport(player, rtpManager.getChannelById(channelId), false);
+            this.processTeleport(player, channel, false);
             return;
         }
     }
@@ -143,11 +145,11 @@ public class RtpListener implements Listener {
             if (!worlds.contains(player.getWorld().getName())) {
                 continue;
             }
-            String channelId = entry.getKey();
-            if (!player.hasPermission("rtp.channel." + channelId)) {
+            Channel channel = rtpManager.getChannelById(entry.getKey());
+            if (!channel.permission().isEmpty() && !player.hasPermission(channel.permission())) {
                 continue;
             }
-            this.processTeleport(player, rtpManager.getChannelById(channelId), false);
+            this.processTeleport(player, channel, false);
             return;
         }
     }
