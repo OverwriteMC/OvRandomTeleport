@@ -13,8 +13,8 @@ permissions:
   rtp.cancel:
     default: true
   rtp.bypasscooldown:
-    default: false
+    default: op
   rtp.near.bypass:
-    default: false
+    default: op
   rtp.admin:
-    default: false
+    default: op
