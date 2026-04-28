@@ -25,4 +25,4 @@ actions:
     - '[SOUND] ENTITY_PLAYER_LEVELUP;1;1'
 messages:
   prefix: '&7&l(&5&lOvRandomTeleport+&7&l) &6»&r'
-  no_perms: '%prefix% &cУ вас не достаточно прав на использование канала телепортации к базам.'
+  no_perms: '%prefix% &cУ вас недостаточно прав на использование канала телепортации к базам.'
