@@ -104,10 +104,7 @@ public class RtpCommand implements TabExecutor {
             Utils.sendMessage(channel.messages().notEnoughPlayers().replace("%required%", Integer.toString(channel.minPlayersToUse())), player);
             return;
         }
-        if (!rtpManager.takeCost(player, channel)) {
-            rtpManager.printDebug("Take cost for channel " + channel.id() + " didn't pass");
-            return;
-        }
+
         List<World> activeWorlds = Utils.getWorldList(channel.activeWorlds());
         if (activeWorlds.isEmpty()) {
             rtpManager.printDebug("Unable to find any active world for channel " + channel.id());
@@ -123,6 +120,12 @@ public class RtpCommand implements TabExecutor {
             Utils.sendMessage(channel.messages().invalidWorld(), player);
             return;
         }
+
+        if (!rtpManager.takeCost(player, channel)) {
+            rtpManager.printDebug("Take cost for channel " + channel.id() + " didn't pass");
+            return;
+        }
+
         rtpManager.preTeleport(player, channel, player.getWorld(), false);
     }
 
