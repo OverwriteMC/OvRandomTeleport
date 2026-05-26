@@ -118,10 +118,11 @@ public class RtpListener implements Listener {
     }
 
     private boolean processProxy(Player player) {
-        if (rtpManager.getProxyCalls() == null || rtpManager.getProxyCalls().isEmpty()) {
+        Map<String, String> proxyCalls = rtpManager.getProxyCalls();
+        if (proxyCalls == null || proxyCalls.isEmpty()) {
             return false;
         }
-        String data = rtpManager.getProxyCalls().get(player.getName());
+        String data = proxyCalls.get(player.getName());
         if (data == null) {
             return false;
         }
@@ -129,7 +130,7 @@ public class RtpListener implements Listener {
         Channel channel = rtpManager.getChannelById(data.substring(0, separatorIndex));
         World world = Bukkit.getWorld(data.substring(separatorIndex + 1));
         rtpManager.preTeleport(player, channel, world, false);
-        rtpManager.getProxyCalls().remove(player.getName());
+        proxyCalls.remove(player.getName());
         return true;
     }
 
