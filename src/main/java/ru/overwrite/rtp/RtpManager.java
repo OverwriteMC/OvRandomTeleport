@@ -200,6 +200,7 @@ public final class RtpManager {
     public void preTeleport(Player player, Channel channel, World world, boolean force) {
         String playerName = player.getName();
         if (teleportingNow.contains(playerName)) {
+            printDebug("Player " + player.getName() + " is already teleporting, not trying to pre teleport");
             return;
         }
         if (proxyCalls != null && !channel.serverToMove().isEmpty()) {
@@ -256,6 +257,10 @@ public final class RtpManager {
     }
 
     public boolean takeCost(Player player, Channel channel) {
+        if (teleportingNow.contains(player.getName())) {
+            printDebug("Player " + player.getName() + " is already teleporting, not taking cost");
+            return false;
+        }
         Costs costs = channel.settings().costs();
         return costs.processMoneyCost(player, channel) &&
                 costs.processHungerCost(player, channel) &&
