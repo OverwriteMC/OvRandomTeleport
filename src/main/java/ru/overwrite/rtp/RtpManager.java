@@ -276,7 +276,6 @@ public final class RtpManager {
 
     public void teleportPlayer(Player player, Channel channel, Location loc) {
         printDebug("Teleporting player '" + player.getName() + "' with channel '" + channel.id() + "' to location " + Utils.locationToString(loc));
-        this.handlePlayerCooldown(player, channel.settings().cooldown());
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (channel.invulnerableTicks() > 0) {
                 player.setNoDamageTicks(channel.invulnerableTicks());
@@ -284,6 +283,7 @@ public final class RtpManager {
             Consumer<Boolean> onTeleport = success -> {
                 if (success) {
                     teleportingNow.remove(player.getName());
+                    this.handlePlayerCooldown(player, channel.settings().cooldown());
                     this.spawnParticleSphere(player, channel.settings().particles().afterTeleport());
                     this.executeActions(player, channel, 0, channel.settings().actions().afterTeleportActions(), loc);
                 } else {
