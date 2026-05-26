@@ -110,23 +110,21 @@ public class RtpCommand implements TabExecutor {
             rtpManager.printDebug("Unable to find any active world for channel " + channel.id());
             return;
         }
-        if (!activeWorlds.contains(player.getWorld())) {
-            rtpManager.printDebug("Active worlds for channel " + channel.id() + " does not includes player's world: " + player.getWorld().getName());
-            if (channel.teleportToFirstAllowedWorld()) {
-                rtpManager.printDebug("Teleporting to first allowed world: " + activeWorlds.get(0));
-                rtpManager.preTeleport(player, channel, activeWorlds.get(0), false);
+        World targetWorld = player.getWorld();
+        if (!activeWorlds.contains(targetWorld)) {
+            rtpManager.printDebug("Active worlds for channel " + channel.id() + " does not includes player's world: " + targetWorld.getName());
+            if (!channel.teleportToFirstAllowedWorld()) {
+                Utils.sendMessage(channel.messages().invalidWorld(), player);
                 return;
             }
-            Utils.sendMessage(channel.messages().invalidWorld(), player);
-            return;
+            targetWorld = activeWorlds.get(0);
+            rtpManager.printDebug("Teleporting to first allowed world: " + targetWorld.getName());
         }
-
         if (!rtpManager.takeCost(player, channel)) {
             rtpManager.printDebug("Take cost for channel " + channel.id() + " didn't pass");
             return;
         }
-
-        rtpManager.preTeleport(player, channel, player.getWorld(), false);
+        rtpManager.preTeleport(player, channel, targetWorld, false);
     }
 
     private void processAdminCommand(CommandSender sender, String[] args) {
