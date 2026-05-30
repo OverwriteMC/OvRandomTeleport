@@ -2,6 +2,7 @@ package ru.overwrite.rtp;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -30,11 +31,17 @@ public class RtpListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {
-        if (!e.hasChangedBlock()) {
-            return;
-        }
         Player player = e.getPlayer();
-        if (processVoid(e, player)) {
+        Location from = e.getFrom();
+        Location to = e.getTo();
+        int fromY = from.getBlockY();
+        int toY = to.getBlockY();
+        if (fromY != toY) {
+            if (processVoid(player, toY, fromY)) {
+                return;
+            }
+        }
+        if (from.getBlockX() == to.getBlockX() && from.getBlockZ() == to.getBlockZ()) {
             return;
         }
         String playerName = player.getName();
@@ -48,11 +55,13 @@ public class RtpListener implements Listener {
         }
     }
 
-    private boolean processVoid(PlayerMoveEvent e, Player player) {
+    private boolean processVoid(Player player, int toY, int fromY) {
+        if (fromY <= toY) {
+            return false;
+        }
         Specifications specifications = rtpManager.getSpecifications();
         Map<String, List<String>> voidChannels = specifications.voidChannels();
-        int toY = e.getTo().getBlockY();
-        if (voidChannels.isEmpty() || e.getFrom().getBlockY() <= toY) {
+        if (voidChannels.isEmpty()) {
             return false;
         }
         for (Map.Entry<String, List<String>> entry : voidChannels.entrySet()) {
