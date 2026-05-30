@@ -11,8 +11,6 @@ import ru.overwrite.rtp.channels.settings.Costs;
 import ru.overwrite.rtp.configuration.Config;
 import ru.overwrite.rtp.utils.Utils;
 
-import java.util.Locale;
-
 public class RtpExpansion extends PlaceholderExpansion {
 
     private final RtpManager rtpManager;
