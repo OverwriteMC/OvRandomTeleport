@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -29,7 +30,7 @@ public class RtpListener implements Listener {
         this.rtpManager = plugin.getRtpManager();
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onMove(PlayerMoveEvent e) {
         Player player = e.getPlayer();
         Location from = e.getFrom();
@@ -179,7 +180,7 @@ public class RtpListener implements Listener {
         rtpManager.preTeleport(player, channel, player.getWorld(), force);
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onDamage(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player player)) {
             return;
@@ -196,7 +197,7 @@ public class RtpListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onDamage(EntityDamageByEntityEvent e) {
         Entity damagerEntity = e.getDamager();
         Entity damagedEntity = e.getEntity();
