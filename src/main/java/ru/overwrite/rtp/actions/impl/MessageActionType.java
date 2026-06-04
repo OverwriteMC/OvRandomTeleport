@@ -48,7 +48,8 @@ public final class MessageActionType implements ActionType {
                 messageToPlayer = Utils.parsePlaceholders(messageToPlayer, player);
             }
 
-            boolean hasAdvancedFormatting = messageToPlayer.contains(BUTTON_PREFIX) ||
+            boolean hasAdvancedFormatting = messageToPlayer.indexOf('{') < 0 ||
+                    messageToPlayer.contains(BUTTON_PREFIX) ||
                     messageToPlayer.contains(HOVER_TEXT_PREFIX) ||
                     messageToPlayer.contains(CLICK_EVENT_PREFIX);
 
@@ -77,7 +78,7 @@ public final class MessageActionType implements ActionType {
                         globalHoverText = extractValue(remainingText, HOVER_TEXT_PREFIX);
                         globalClickEvent = extractValue(remainingText, CLICK_EVENT_PREFIX);
 
-                        remainingText = extractMessage(remainingText);
+                        remainingText = getBaseMessage(remainingText);
                         if (!remainingText.isEmpty()) {
                             components.add(LEGACY_COMPONENT_SERIALIZER.deserialize(remainingText));
                         }
@@ -91,7 +92,7 @@ public final class MessageActionType implements ActionType {
                     globalHoverText = extractValue(beforeButton, HOVER_TEXT_PREFIX);
                     globalClickEvent = extractValue(beforeButton, CLICK_EVENT_PREFIX);
 
-                    beforeButton = extractMessage(beforeButton);
+                    beforeButton = getBaseMessage(beforeButton);
                     if (!beforeButton.isEmpty()) {
                         components.add(LEGACY_COMPONENT_SERIALIZER.deserialize(beforeButton));
                     }
@@ -217,22 +218,6 @@ public final class MessageActionType implements ActionType {
                 }
             }
             return null;
-        }
-
-        private String extractMessage(String message) {
-            String baseMessage = getBaseMessage(message);
-
-            for (String marker : HOVER_MARKERS) {
-                int startIndex = message.indexOf(marker);
-                if (startIndex != -1) {
-                    int endIndexMarker = findClosingBracket(message, startIndex + marker.length() - 1);
-                    if (endIndexMarker != -1) {
-                        message = message.substring(0, startIndex).trim() + " " + message.substring(endIndexMarker + 1).trim();
-                    }
-                }
-            }
-
-            return baseMessage.trim();
         }
 
         private String getBaseMessage(String message) {
