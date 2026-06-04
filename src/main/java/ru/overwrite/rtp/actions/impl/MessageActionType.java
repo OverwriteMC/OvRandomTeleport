@@ -48,7 +48,7 @@ public final class MessageActionType implements ActionType {
                 messageToPlayer = Utils.parsePlaceholders(messageToPlayer, player);
             }
 
-            boolean hasAdvancedFormatting = messageToPlayer.indexOf('{') < 0 ||
+            boolean hasAdvancedFormatting = messageToPlayer.indexOf('{') > 0 &&
                     messageToPlayer.contains(BUTTON_PREFIX) ||
                     messageToPlayer.contains(HOVER_TEXT_PREFIX) ||
                     messageToPlayer.contains(CLICK_EVENT_PREFIX);
