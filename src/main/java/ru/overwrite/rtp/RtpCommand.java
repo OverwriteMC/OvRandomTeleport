@@ -206,9 +206,8 @@ public class RtpCommand implements TabExecutor {
     }
 
     public void checkAndUpdatePlugin(CommandSender sender, OvRandomTeleport plugin) {
+        sender.sendMessage("§6Подождите немного...");
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Utils.checkUpdates(plugin, version -> {
-            sender.sendMessage("§6Подождите немного...");
-
             String currentVersion = plugin.getDescription().getVersion();
 
             if (currentVersion.equals(version)) {
