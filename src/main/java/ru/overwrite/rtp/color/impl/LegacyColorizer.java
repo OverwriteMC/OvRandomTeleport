@@ -33,17 +33,13 @@ public class LegacyColorizer implements Colorizer {
         if (message == null) {
             return null;
         }
-        final char[] s = message.toCharArray();
-        final int len = s.length;
-        if (len == 0) {
-            return message;
-        }
-
         final int firstAmp = message.indexOf(ALT_COLOR_CHAR);
         if (firstAmp < 0) {
             return message;
         }
 
+        final char[] s = message.toCharArray();
+        final int len = s.length;
         final char[] d = new char[len + ((len >>> 3) * 6)];
         int w = 0;
         int i = 0;
