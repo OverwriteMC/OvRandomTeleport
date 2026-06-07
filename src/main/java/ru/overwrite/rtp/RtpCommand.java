@@ -217,6 +217,16 @@ public class RtpCommand implements TabExecutor {
                 String downloadUrl = "https://github.com/OverwriteMC/OvRandomTeleport/releases/download/" + version + "/" + "OvRandomTeleport-" + version + ".jar";
                 try {
                     File updateFolder = Bukkit.getUpdateFolderFile();
+
+                    if (!updateFolder.exists()) {
+                        if (updateFolder.mkdirs()) {
+                            sender.sendMessage("§aПапка для обновлений не найдена, создали новую.");
+                        } else {
+                            sender.sendMessage("§cНе удалось создать папку для обновлений!");
+                            return;
+                        }
+                    }
+
                     File targetFile = new File(updateFolder, currentJarName);
 
                     downloadFile(downloadUrl, targetFile, sender);
