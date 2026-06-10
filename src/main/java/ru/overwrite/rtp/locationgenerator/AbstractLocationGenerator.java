@@ -74,28 +74,33 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         return -1;
     }
 
-    protected boolean isInsideRadiusSquare(int x, int z, int minX, int minZ, int maxX, int maxZ, int centerX, int centerZ) {
-        int realMinX = centerX + minX;
-        int realMinZ = centerZ + minZ;
-        int realMaxX = centerX + maxX;
-        int realMaxZ = centerZ + maxZ;
+    protected boolean isOutsideRadiusSquare(int x, int z, int minX, int minZ, int maxX, int maxZ, int centerX, int centerZ) {
+        int deltaX = Math.abs(x - centerX);
+        int deltaZ = Math.abs(z - centerZ);
 
-        return (x >= realMinX && x <= realMaxX && z >= realMinZ && z <= realMaxZ);
+        boolean withinOuter = deltaX <= maxX && deltaZ <= maxZ;
+        boolean outsideInner = deltaX >= minX || deltaZ >= minZ;
+
+        return !(withinOuter && outsideInner);
     }
 
-    protected boolean isInsideRadiusCircle(int x, int z, int minX, int minZ, int maxX, int maxZ, int centerX, int centerZ) {
-        int deltaX = x - centerX;
-        int deltaZ = z - centerZ;
+    protected boolean isOutsideRadiusCircle(int x, int z, int minX, int minZ, int maxX, int maxZ, int centerX, int centerZ) {
+        double deltaX = x - centerX;
+        double deltaZ = z - centerZ;
 
-        double maxDistanceRatioX = (double) deltaX / maxX;
-        double maxDistanceRatioZ = (double) deltaZ / maxZ;
-        double maxDistance = maxDistanceRatioX * maxDistanceRatioX + maxDistanceRatioZ * maxDistanceRatioZ;
+        double maxDistance = squared(deltaX) / squared(maxX) + squared(deltaZ) / squared(maxZ);
 
-        double minDistanceRatioX = (double) deltaX / minX;
-        double minDistanceRatioZ = (double) deltaZ / minZ;
-        double minDistance = minDistanceRatioX * minDistanceRatioX + minDistanceRatioZ * minDistanceRatioZ;
+        double minTermX = minX == 0 ? 0 : squared(deltaX) / squared(minX);
+        double minTermZ = minZ == 0 ? 0 : squared(deltaZ) / squared(minZ);
+        double minDistance = minTermX + minTermZ;
 
-        return maxDistance <= 1 && minDistance >= 2;
+        boolean outsideInner = (minX == 0 && minZ == 0) || minDistance >= 1;
+
+        return maxDistance > 1 || !outsideInner;
+    }
+
+    protected double squared(double value) {
+        return value * value;
     }
 
     protected Location finalizeLocation(Player player, Settings settings, World world, int x, int z, boolean avoidTrees) {
