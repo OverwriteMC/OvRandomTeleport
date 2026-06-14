@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TimedExpiringMap<K, V> {
 
+    private static final String[] EMPTY_REPLACE = new String[0];
+
     private final Cache<K, ExpiringValue<V>> cache;
     private final TimeUnit unit;
 
@@ -33,15 +35,14 @@ public class TimedExpiringMap<K, V> {
                     }
                 });
         if (!expireActions.isEmpty()) {
-            caffeine.removalListener((K, V, cause) -> {
+            caffeine.removalListener((k, v, cause) -> {
                 if (cause == RemovalCause.EXPIRED) {
-                    Player player = Bukkit.getPlayer((String) K);
+                    Player player = Bukkit.getPlayerExact((String) k);
                     if (player == null || !player.isOnline()) {
                         return;
                     }
-                    String[] empty = new String[0];
                     for (Action action : expireActions) {
-                        action.perform(player, empty, empty);
+                        action.perform(player, EMPTY_REPLACE, EMPTY_REPLACE);
                     }
                 }
             });
