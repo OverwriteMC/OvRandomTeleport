@@ -61,11 +61,21 @@ public record LocationGenOptions(
         int maxX = locationGenOptions.getInt("max_x", 1000);
         int minZ = locationGenOptions.getInt("min_z", -1000);
         int maxZ = locationGenOptions.getInt("max_z", 1000);
-        int nearRadiusMin = locationGenOptions.getInt("min_near_point_distance", 30);
-        int nearRadiusMax = locationGenOptions.getInt("max_near_point_distance", 60);
+        if (minX > maxX || minZ > maxZ) {
+            minX = -1000;
+            maxX = 1000;
+            minZ = -1000;
+            maxZ = 1000;
+        }
+        int nearRadiusMin = Math.max(locationGenOptions.getInt("min_near_point_distance", 30), 0);
+        int nearRadiusMax = Math.max(locationGenOptions.getInt("max_near_point_distance", 60), 0);
+        if (nearRadiusMin > nearRadiusMax) {
+            nearRadiusMin = 30;
+            nearRadiusMax = 60;
+        }
         int centerX = locationGenOptions.getInt("center_x", 0);
         int centerZ = locationGenOptions.getInt("center_z", 0);
-        int maxLocationAttempts = locationGenOptions.getInt("max_location_attempts", 50);
+        int maxLocationAttempts = Math.max(locationGenOptions.getInt("max_location_attempts", 50), 1);
         boolean playerOrientedCenter = locationGenOptions.getBoolean("player_oriented_center", false);
         boolean avoidTrees = VersionUtils.SUB_VERSION > 19 && locationGenOptions.getBoolean("avoid_trees", false);
         int yAdd = !avoidTrees ? locationGenOptions.getInt("y_add", 0) : 0;
