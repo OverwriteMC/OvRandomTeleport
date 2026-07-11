@@ -217,7 +217,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
                 double theta, r;
                 do {
                     theta = random.nextDouble(2 * Math.PI);
-                    r = Math.sqrt(squared(radiusMin) + random.nextDouble()*(squared(radiusMax) - squared(radiusMin)));
+                    r = Math.sqrt(squared(radiusMin) + random.nextDouble() * (squared(radiusMax) - squared(radiusMin)));
                     x = (int) (centerX + r * Math.cos(theta));
                     z = (int) (centerZ + r * Math.sin(theta));
                 } while (isOutsideRadiusSquare(x, z, minX, minZ, maxX, maxZ, genCenterX, genCenterZ));
@@ -244,7 +244,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
                 double theta, r;
                 do {
                     theta = random.nextDouble(2 * Math.PI);
-                    r = Math.sqrt(squared(radiusMin) + random.nextDouble()*(squared(radiusMax) - squared(radiusMin)));
+                    r = Math.sqrt(squared(radiusMin) + random.nextDouble() * (squared(radiusMax) - squared(radiusMin)));
                     x = (int) (centerX + r * Math.cos(theta));
                     z = (int) (centerZ + r * Math.sin(theta));
                 } while (x < minX || x > maxX || z < minZ || z > maxZ);
@@ -256,7 +256,7 @@ public class BasicLocationGenerator extends AbstractLocationGenerator {
                 double theta, r;
                 do {
                     theta = random.nextDouble(2 * Math.PI);
-                    r = Math.sqrt(squared(radiusMin) + random.nextDouble()*(squared(radiusMax) - squared(radiusMin)));
+                    r = Math.sqrt(squared(radiusMin) + random.nextDouble() * (squared(radiusMax) - squared(radiusMin)));
                     x = (int) (centerX + r * Math.cos(theta));
                     z = (int) (centerZ + r * Math.sin(theta));
                 } while (isOutsideRadiusCircle(x, z, minX, minZ, maxX, maxZ, genCenterX, genCenterZ));
