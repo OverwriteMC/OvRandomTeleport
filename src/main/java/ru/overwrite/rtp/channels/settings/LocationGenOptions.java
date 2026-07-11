@@ -61,7 +61,7 @@ public record LocationGenOptions(
         int maxX = locationGenOptions.getInt("max_x", 1000);
         int minZ = locationGenOptions.getInt("min_z", -1000);
         int maxZ = locationGenOptions.getInt("max_z", 1000);
-        if (minX > maxX || minZ > maxZ) {
+        if (minX > maxX || minZ > maxZ || minX == maxX && minZ == maxZ && minX == minZ) {
             minX = -1000;
             maxX = 1000;
             minZ = -1000;
@@ -75,6 +75,10 @@ public record LocationGenOptions(
         }
         int centerX = locationGenOptions.getInt("center_x", 0);
         int centerZ = locationGenOptions.getInt("center_z", 0);
+        if (centerX > maxX || centerZ > maxZ || centerX < minX || centerZ < minZ) {
+            centerX = 0;
+            centerZ = 0;
+        }
         int maxLocationAttempts = Math.max(locationGenOptions.getInt("max_location_attempts", 50), 1);
         boolean playerOrientedCenter = locationGenOptions.getBoolean("player_oriented_center", false);
         boolean avoidTrees = VersionUtils.SUB_VERSION > 19 && locationGenOptions.getBoolean("avoid_trees", false);
