@@ -40,17 +40,22 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
         }
         for (int y = highest; y > VersionUtils.VOID_LEVEL; y--) {
             Block block = world.getBlockAt(x, y, z);
+            if (!block.isSolid()) {
+                continue;
+            }
             Material type = block.getType();
-
-            if (!block.isSolid() || Tag.LEAVES.isTagged(type) || Tag.LOGS.isTagged(type)) {
+            if (Tag.LEAVES.isTagged(type) || Tag.LOGS.isTagged(type)) {
                 continue;
             }
 
             boolean hasSolidAbove = false;
             for (int yy = y + 1; yy <= highest; yy++) {
                 Block above = world.getBlockAt(x, yy, z);
+                if (above.isSolid()) {
+                    continue;
+                }
                 Material aboveType = above.getType();
-                if (above.isSolid() && !Tag.LEAVES.isTagged(aboveType) && !Tag.LOGS.isTagged(aboveType)) {
+                if (!Tag.LEAVES.isTagged(aboveType) && !Tag.LOGS.isTagged(aboveType)) {
                     hasSolidAbove = true;
                     break;
                 }
