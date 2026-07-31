@@ -221,11 +221,7 @@ public final class RtpManager {
         teleportingNow.add(playerName);
         Runnable teleportTask = () -> {
             long startTime = System.currentTimeMillis();
-            Location loc = switch (channel.type()) {
-                case DEFAULT -> locationGenerator.generateRandomLocation(player, settings, world);
-                case NEAR_PLAYER -> locationGenerator.generateRandomLocationNearPlayer(player, settings, world);
-                case NEAR_REGION -> locationGenerator.generateRandomLocationNearRandomRegion(player, settings, world);
-            };
+            Location loc = channel.type().generateLocation(locationGenerator, player, settings, world);
             long endTime = System.currentTimeMillis();
             long locationFound = endTime - startTime;
             if (locationFound > 500) {
