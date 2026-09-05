@@ -64,8 +64,7 @@ public record Costs(
             sendNotEnoughMoneyMessage(channel, player);
             return false;
         }
-        economy.withdrawPlayer(player, moneyCost);
-        return true;
+        return economy.withdrawPlayer(player, moneyCost).transactionSuccess();
     }
 
     private boolean processPlayerPointsMoneyCost(Player player, Channel channel) {
@@ -73,8 +72,7 @@ public record Costs(
             sendNotEnoughMoneyMessage(channel, player);
             return false;
         }
-        PlayerPointsUtils.withdraw(player, (int) moneyCost);
-        return true;
+        return PlayerPointsUtils.withdraw(player, (int) moneyCost);
     }
 
     private void sendNotEnoughMoneyMessage(Channel channel, Player player) {
