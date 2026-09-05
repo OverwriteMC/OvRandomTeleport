@@ -92,6 +92,7 @@ public class Config {
     }
 
     public void setupTemplates() {
+        channelTemplates.clear();
         final FileConfiguration templatesConfig = getFile(plugin.getDataFolder().getAbsolutePath(), "templates.yml");
         Set<String> keys = templatesConfig.getKeys(false);
         if (keys.isEmpty()) {
