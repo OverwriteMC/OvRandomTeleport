@@ -51,7 +51,7 @@ public abstract class AbstractLocationGenerator implements LocationGenerator {
             boolean hasSolidAbove = false;
             for (int yy = y + 1; yy <= highest; yy++) {
                 Block above = world.getBlockAt(x, yy, z);
-                if (above.isSolid()) {
+                if (!above.isSolid()) {
                     continue;
                 }
                 Material aboveType = above.getType();
