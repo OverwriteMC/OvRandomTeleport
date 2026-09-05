@@ -119,7 +119,7 @@ public class RtpTask {
         }
         List<Action> actionList = onCooldownActions.get(preTeleportCooldown);
         if (actionList != null) {
-            rtpManager.executeActions(this.player, this.activeChannel, finalPreTeleportCooldown, actionList, this.player.getLocation());
+            rtpManager.executeActions(this.player, this.activeChannel, preTeleportCooldown, actionList, this.player.getLocation());
         }
     }
 
