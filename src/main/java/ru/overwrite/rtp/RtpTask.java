@@ -38,9 +38,6 @@ public class RtpTask {
     public void startPreTeleportTimer(Location location) {
         this.preTeleportCooldown = this.finalPreTeleportCooldown;
         Settings settings = this.activeChannel.settings();
-        if (settings.bossbar().bossbarEnabled()) {
-            this.setupBossBar(settings.bossbar());
-        }
         Particles particles = settings.particles();
         if (particles.preTeleport().enabled()) {
             this.animationTask = switch (particles.preTeleport().animation()) {
@@ -63,6 +60,9 @@ public class RtpTask {
                 handleCooldownActions();
             }
         }.runTaskTimerAsynchronously(plugin, 20L, 20L);
+        if (settings.bossbar().bossbarEnabled()) {
+            this.setupBossBar(settings.bossbar());
+        }
         rtpManager.getPerPlayerActiveRtpTask().put(this.player.getName(), this);
     }
 
