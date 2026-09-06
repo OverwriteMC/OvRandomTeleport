@@ -63,17 +63,16 @@ public record LocationGenOptions(
         int minZ = locationGenOptions.getInt("min_z", -1000);
         int maxZ = locationGenOptions.getInt("max_z", 1000);
         boolean defaultsApplied = false;
-        boolean invalidRadial = genFormat == GenFormat.RADIAL && (minX < 0 || minZ < 0 || minX >= maxX || minZ >= maxZ);
-        if (minX > maxX || minZ > maxZ || minX == maxX && minZ == maxZ && minX == minZ || maxX == Integer.MAX_VALUE || maxZ == Integer.MAX_VALUE || invalidRadial) {
+        if (isInvalidBounds(minX, maxX, minZ, maxZ, genFormat)) {
             minX = genFormat == GenFormat.RADIAL ? 0 : -1000;
             maxX = 1000;
-            minZ = genFormat == GenFormat.RADIAL ? 0 : -1000;
+            minZ = minX;
             maxZ = 1000;
             defaultsApplied = true;
         }
         int nearRadiusMin = locationGenOptions.getInt("min_near_point_distance", 30);
         int nearRadiusMax = locationGenOptions.getInt("max_near_point_distance", 60);
-        if (nearRadiusMin < 0 || nearRadiusMax < 0 || nearRadiusMin > nearRadiusMax || nearRadiusMax == Integer.MAX_VALUE) {
+        if (isInvalidNearRadius(nearRadiusMin, nearRadiusMax)) {
             nearRadiusMin = 30;
             nearRadiusMax = 60;
             defaultsApplied = true;
@@ -114,5 +113,14 @@ public record LocationGenOptions(
                 avoidTrees,
                 yAdd
         );
+    }
+
+    private static boolean isInvalidBounds(int minX, int maxX, int minZ, int maxZ, GenFormat genFormat) {
+        boolean invalidRadial = genFormat == GenFormat.RADIAL && (minX < 0 || minZ < 0 || minX >= maxX || minZ >= maxZ);
+        return minX > maxX || minZ > maxZ || minX == maxX && minZ == maxZ && minX == minZ || maxX == Integer.MAX_VALUE || maxZ == Integer.MAX_VALUE || invalidRadial;
+    }
+
+    private static boolean isInvalidNearRadius(int min, int max) {
+        return min < 0 || max < 0 || min > max || max == Integer.MAX_VALUE;
     }
 }
