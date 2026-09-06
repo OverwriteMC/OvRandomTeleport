@@ -209,7 +209,7 @@ public final class RtpManager {
             plugin.getPluginMessage().connectToServer(player, channel.serverToMove());
             return;
         }
-        if (teleportingNow.size() > maxTeleporting && !channel.bypassMaxTeleportLimit()) {
+        if (teleportingNow.size() >= maxTeleporting && !channel.bypassMaxTeleportLimit()) {
             Utils.sendMessage(pluginConfig.getCommandMessages().tooMuchTeleporting(), player);
             printDebug("Unable to pre teleport player '" + playerName + "' because too much players are teleporting and channel '" + channel.id() + "' does not have a bypass");
             return;
