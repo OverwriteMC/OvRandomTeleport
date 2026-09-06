@@ -17,10 +17,10 @@ public record Settings(
     public static Settings create(OvRandomTeleport plugin, ConfigurationSection config) {
         return new Settings(
                 Costs.create(plugin, config.getConfigurationSection("costs")),
-                LocationGenOptions.create(config.getConfigurationSection("location_generation_options")),
+                LocationGenOptions.create(config.getConfigurationSection("location_generation_options"), plugin.getRtpManager()),
                 Cooldown.create(plugin.getPerms(), plugin.getRtpManager().getActionService(), config.getConfigurationSection("cooldown")),
                 Bossbar.create(config.getConfigurationSection("bossbar")),
-                Particles.create(config.getConfigurationSection("particles")),
+                Particles.create(config.getConfigurationSection("particles"), plugin.getRtpManager()),
                 Restrictions.create(config.getConfigurationSection("restrictions")),
                 Avoidance.create(config.getConfigurationSection("avoid")),
                 Actions.create(plugin.getRtpManager().getActionService(), config.getConfigurationSection("actions"))

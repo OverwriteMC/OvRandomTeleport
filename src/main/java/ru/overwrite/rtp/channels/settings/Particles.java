@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
+import ru.overwrite.rtp.RtpManager;
 import ru.overwrite.rtp.utils.Utils;
 
 import java.util.List;
@@ -77,7 +78,7 @@ public record Particles(
             )
     );
 
-    public static Particles create(ConfigurationSection particles) {
+    public static Particles create(ConfigurationSection particles, RtpManager rtpManager) {
         if (particles == null || particles.getKeys(false).isEmpty()) {
             return EMPTY_PARTICLES;
         }
@@ -103,6 +104,7 @@ public record Particles(
         int afterTeleportCount = 0;
         double afterTeleportRadius = 0.0D;
         double afterTeleportParticleSpeed = 0.0D;
+        boolean defaultsApplied = false;
 
         ConfigurationSection preTeleportSection = particles.getConfigurationSection("pre_teleport");
         if (preTeleportSection != null) {
@@ -129,6 +131,38 @@ public record Particles(
             }
 
             preTeleportCirclesOffset = new DoubleArrayList(preTeleportSection.getDoubleList("circles_offset"));
+            if (preTeleportEnabled) {
+                if (preTeleportParticles == null) {
+                    preTeleportParticles = List.of(new ParticleData(Particle.FLAME, null));
+                    defaultsApplied = true;
+                }
+                if (preTeleportDots <= 0) {
+                    preTeleportDots = 16;
+                    defaultsApplied = true;
+                }
+                if (preTeleportAnimation == AnimationType.CAGE) {
+                    if (preTeleportLines <= 0 || preTeleportLines > preTeleportDots || preTeleportDots % preTeleportLines != 0) {
+                        preTeleportDots = 16;
+                        preTeleportLines = 8;
+                        defaultsApplied = true;
+                    }
+                    if (preTeleportDotsPerLine < 2) {
+                        preTeleportDotsPerLine = 8;
+                        defaultsApplied = true;
+                    }
+                    for (int i = 0; i < preTeleportCirclesOffset.size(); i++) {
+                        double offset = preTeleportCirclesOffset.getDouble(i);
+                        if (!Double.isFinite(offset) || i > 0 && offset > preTeleportCirclesOffset.getDouble(i - 1)) {
+                            preTeleportCirclesOffset.clear();
+                            break;
+                        }
+                    }
+                    if (preTeleportCirclesOffset.size() < 2 || preTeleportCirclesOffset.getDouble(0) <= preTeleportCirclesOffset.getDouble(preTeleportCirclesOffset.size() - 1)) {
+                        preTeleportCirclesOffset = new DoubleArrayList(new double[]{2.0D, 0.0D});
+                        defaultsApplied = true;
+                    }
+                }
+            }
         }
 
         ConfigurationSection afterTeleportSection = particles.getConfigurationSection("after_teleport");
@@ -143,6 +177,20 @@ public record Particles(
             if (particleDataString != null) {
                 afterTeleportParticle = Utils.createParticleData(particleDataString);
             }
+            if (afterTeleportEnabled) {
+                if (afterTeleportParticle == null) {
+                    afterTeleportParticle = new ParticleData(Particle.CLOUD, null);
+                    defaultsApplied = true;
+                }
+                if (afterTeleportCount < 2) {
+                    afterTeleportCount = 45;
+                    defaultsApplied = true;
+                }
+            }
+        }
+
+        if (defaultsApplied) {
+            rtpManager.printDebug("Invalid values in " + particles.getCurrentPath() + " replaced with defaults");
         }
 
         PreTeleportParticles preTeleport = new PreTeleportParticles(
