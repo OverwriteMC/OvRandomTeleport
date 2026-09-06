@@ -289,10 +289,14 @@ public final class RtpManager {
                 }
             };
             if (!Utils.NON_ASYNC_MODE) {
-                player.teleportAsync(loc).thenAccept(onTeleport);
+                player.teleportAsync(loc).whenComplete((success, exception) -> {
+                    if (exception != null) {
+                        plugin.getPluginLogger().warn("Failed to teleport " + player.getName() + ": " + exception);
+                    }
+                    onTeleport.accept(exception == null && success);
+                });
             } else {
-                player.teleport(loc);
-                onTeleport.accept(true);
+                onTeleport.accept(player.teleport(loc));
             }
         });
     }
