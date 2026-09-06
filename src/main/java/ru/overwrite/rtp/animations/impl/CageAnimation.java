@@ -20,10 +20,10 @@ public class CageAnimation extends Animation {
     private final int dots = particles.preTeleport().dots();
     private final int lines = particles.preTeleport().lines();
     private final int dotsPerLine = particles.preTeleport().dotsPerLine();
-    private final int countPerLine = Math.max(dots, lines) / Math.min(dots, lines);
+    private final int countPerLine = dots / lines;
 
     private final double circleOffset = C / dots;
-    private final double lineOffset = (first - last) / countPerLine;
+    private final double lineOffset = (first - last) / (dotsPerLine - 1);
 
     private final double speed = Math.max(0, particles.preTeleport().particleSpeed());
     private final double radius = Math.max(0.1, particles.preTeleport().radius());
@@ -78,8 +78,9 @@ public class CageAnimation extends Animation {
                         preTeleportParticleData.dustOptions()
                 );
 
-                if (circle == 0 && i % dotsPerLine == 0) {
-                    for (double y = last; y <= first; y += lineOffset) {
+                if (circle == 0 && i % countPerLine == 0) {
+                    for (int point = 0; point < dotsPerLine; point++) {
+                        double y = last + point * lineOffset;
                         world.spawnParticle(
                                 preTeleportParticleData.particle(),
                                 receivers,
