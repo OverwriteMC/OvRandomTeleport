@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -257,10 +258,24 @@ public final class RtpManager {
             printDebug("Player " + player.getName() + " is already teleporting, not taking cost");
             return false;
         }
+        if ((proxyCalls == null || channel.serverToMove().isEmpty()) && teleportingNow.size() >= maxTeleporting && !channel.bypassMaxTeleportLimit()) {
+            Utils.sendMessage(pluginConfig.getCommandMessages().tooMuchTeleporting(), player);
+            return false;
+        }
         Costs costs = channel.settings().costs();
-        return costs.processMoneyCost(player, channel) &&
-                costs.processHungerCost(player, channel) &&
-                costs.processExpCost(player, channel);
+        if (!costs.processMoneyCost(player, channel)) {
+            return false;
+        }
+        GameMode gameMode = player.getGameMode();
+        boolean hungerSuccess = costs.processHungerCost(player, channel);
+        if (hungerSuccess && costs.processExpCost(player, channel)) {
+            return true;
+        }
+        costs.processMoneyReturn(player);
+        if (hungerSuccess && gameMode != GameMode.CREATIVE) {
+            costs.processHungerReturn(player);
+        }
+        return false;
     }
 
     public void returnCost(Player player, Channel channel) {
