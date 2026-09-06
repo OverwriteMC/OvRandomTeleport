@@ -16,6 +16,7 @@ import ru.overwrite.rtp.color.ColorizerProvider;
 import ru.overwrite.rtp.configuration.Config;
 import ru.overwrite.rtp.configuration.data.CommandMessages;
 import ru.overwrite.rtp.utils.Utils;
+import ru.overwrite.rtp.utils.TimedExpiringMap;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -94,10 +95,12 @@ public class RtpCommand implements TabExecutor {
             return;
         }
         Cooldown cooldown = channel.settings().cooldown();
-        if (cooldown.hasCooldown(player)) {
+        TimedExpiringMap<String, Long> playerCooldowns = cooldown.playerCooldowns();
+        Long lastTeleport = playerCooldowns == null || playerCooldowns.isEmpty() ? null : playerCooldowns.get(player.getName());
+        if (lastTeleport != null) {
             Utils.sendMessage(channel.messages().cooldown()
                     .replace("%time%",
-                            Utils.getTime((int) (rtpManager.getCooldown(player, cooldown.defaultCooldown(), cooldown.groupCooldowns()) - (System.currentTimeMillis() - cooldown.playerCooldowns().get(player.getName())) / 1000))), player);
+                            Utils.getTime((int) (rtpManager.getCooldown(player, cooldown.defaultCooldown(), cooldown.groupCooldowns()) - (System.currentTimeMillis() - lastTeleport) / 1000))), player);
             return;
         }
         if (channel.minPlayersToUse() > 0 && (Bukkit.getOnlinePlayers().size() - 1) < channel.minPlayersToUse()) {
