@@ -128,16 +128,7 @@ public record Particles(
                 preTeleportParticles = builder.build();
             }
 
-            List<?> offsetStrings = preTeleportSection.getList("circles_offset");
-            if (offsetStrings != null && !offsetStrings.isEmpty()) {
-                preTeleportCirclesOffset = new DoubleArrayList();
-                for (Object offsetStr : offsetStrings) {
-                    if (!(offsetStr instanceof Double d)) {
-                        continue;
-                    }
-                    preTeleportCirclesOffset.add(d.doubleValue());
-                }
-            }
+            preTeleportCirclesOffset = new DoubleArrayList(preTeleportSection.getDoubleList("circles_offset"));
         }
 
         ConfigurationSection afterTeleportSection = particles.getConfigurationSection("after_teleport");
